@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">MarkdownNote</string>
+    <string name="complete">完了</string>
+    <string name="save_confirm_message">変更内容を保存しますか？</string>
+    <string name="yes">はい</string>
+    <string name="no">いいえ</string>
+    <string name="cancel">キャンセル</string>
+    <string name="today">今日</string>
+    <string name="yesterday">昨日</string>
+    <string name="sunday">日</string>
+    <string name="monday">月</string>
+    <string name="tuesday">火</string>
+    <string name="wednesday">水</string>
+    <string name="thursday">木</string>
+    <string name="friday">金</string>
+    <string name="saturday">土</string>
+</resources>
