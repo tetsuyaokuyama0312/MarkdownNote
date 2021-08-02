@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">MarkdownNote</string>
+    <string name="editor">Editor</string>
     <string name="complete">Complete</string>
+    <string name="edit">Edit</string>
+    <string name="view">View</string>
+    <string name="separate">Separate</string>
     <string name="save_confirm_message">Save your changes?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>

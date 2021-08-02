@@ -8,6 +8,11 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
+import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.RelativeLayout
+import android.widget.Space
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.to.markdownnote.model.Memo
 import com.to.markdownnote.repository.deleteMemo
@@ -45,6 +50,7 @@ class EditorActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editor)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setTitle(R.string.editor)
 
         targetMemo = intent.getParcelableExtra(MEMO_KEY)
 
@@ -88,6 +94,24 @@ class EditorActivity : AppCompatActivity() {
                     finish()
                 }
             }
+            R.id.menu_edit ->
+                ScreenMode.EDIT.apply(
+                    vertical_separator,
+                    markdown_editor_edittext,
+                    markdown_rendering_result_textview
+                )
+            R.id.menu_separate ->
+                ScreenMode.SEPARATE.apply(
+                    vertical_separator,
+                    markdown_editor_edittext,
+                    markdown_rendering_result_textview
+                )
+            R.id.menu_view ->
+                ScreenMode.VIEW.apply(
+                    vertical_separator,
+                    markdown_editor_edittext,
+                    markdown_rendering_result_textview
+                )
             R.id.menu_complete ->
                 performComplete()
             else ->
@@ -170,5 +194,76 @@ class EditorActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    /**
+     * 画面モードを表す列挙型
+     */
+    private enum class ScreenMode {
+        /** 編集モード */
+        EDIT {
+            override fun changeSeparatorLayout(layoutParams: RelativeLayout.LayoutParams) {
+                layoutParams.removeRule(RelativeLayout.ALIGN_PARENT_START)
+                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END)
+            }
+
+            override fun changeEditorTextLayout(editorText: EditText) {
+                editorText.width = ViewGroup.LayoutParams.MATCH_PARENT
+            }
+
+            override fun changeResultViewLayout(resultView: TextView) {
+                resultView.width = 0
+            }
+        },
+
+        /** 分割モード */
+        SEPARATE {
+            override fun changeSeparatorLayout(layoutParams: RelativeLayout.LayoutParams) {
+                layoutParams.removeRule(RelativeLayout.ALIGN_PARENT_START)
+                layoutParams.removeRule(RelativeLayout.ALIGN_PARENT_END)
+            }
+
+            override fun changeEditorTextLayout(editorText: EditText) {
+                editorText.width = 0
+            }
+
+            override fun changeResultViewLayout(resultView: TextView) {
+                resultView.width = 0
+            }
+        },
+
+        /** 閲覧モード */
+        VIEW {
+            override fun changeSeparatorLayout(layoutParams: RelativeLayout.LayoutParams) {
+                layoutParams.removeRule(RelativeLayout.ALIGN_PARENT_END)
+                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_START)
+            }
+
+            override fun changeEditorTextLayout(editorText: EditText) {
+                editorText.width = 0
+            }
+
+            override fun changeResultViewLayout(resultView: TextView) {
+                resultView.width = ViewGroup.LayoutParams.MATCH_PARENT
+            }
+        };
+
+        /**
+         * このモードを適用する。
+         *
+         * @param separator 画面を分割するセパレータ
+         * @param editorText テキスト編集部のEditText
+         * @param resultView テキストレンダリング結果のTextView
+         */
+        fun apply(separator: Space, editorText: EditText, resultView: TextView) {
+            val layoutParams = separator.layoutParams as? RelativeLayout.LayoutParams ?: return
+            changeSeparatorLayout(layoutParams)
+            changeEditorTextLayout(editorText)
+            changeResultViewLayout(resultView)
+        }
+
+        abstract fun changeSeparatorLayout(layoutParams: RelativeLayout.LayoutParams)
+        abstract fun changeEditorTextLayout(editorText: EditText)
+        abstract fun changeResultViewLayout(resultView: TextView)
     }
 }

@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">MarkdownNote</string>
+    <string name="editor">Editor</string>
     <string name="complete">完了</string>
+    <string name="edit">編集</string>
+    <string name="view">閲覧</string>
+    <string name="separate">分割</string>
     <string name="save_confirm_message">変更内容を保存しますか？</string>
     <string name="yes">はい</string>
     <string name="no">いいえ</string>

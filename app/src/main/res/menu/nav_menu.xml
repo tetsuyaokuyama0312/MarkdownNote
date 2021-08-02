@@ -2,8 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_complete"
+        android:id="@+id/menu_edit"
+        android:icon="@drawable/ic_edit"
         android:title="@string/complete"
-        app:showAsAction="ifRoom" />
-<!--    app:actionLayout="@layout/menu_save"-->
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_separate"
+        android:icon="@drawable/ic_separate"
+        android:title="@string/complete"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_view"
+        android:icon="@drawable/ic_view"
+        android:title="@string/complete"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_complete"
+        android:icon="@drawable/ic_complete"
+        android:title="@string/complete"
+        app:showAsAction="always" />
 </menu>
