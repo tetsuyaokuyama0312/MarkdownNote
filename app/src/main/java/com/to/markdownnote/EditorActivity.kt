@@ -155,7 +155,7 @@ class EditorActivity : AppCompatActivity() {
     private fun performComplete() {
         if (!textEditedByUser) {
             // ユーザーにより編集されていない場合は何もせずエディタ画面終了
-            startActivity(TopActivity.createIntent(this))
+            finish()
             return
         }
 
@@ -174,7 +174,7 @@ class EditorActivity : AppCompatActivity() {
 
         if (text.isEmpty()) {
             // 空の場合は何もせずエディタ画面終了
-            startActivity(TopActivity.createIntent(this))
+            finish()
         } else {
             // 入力済みの場合は保存
             insertMemo(this, text) {
