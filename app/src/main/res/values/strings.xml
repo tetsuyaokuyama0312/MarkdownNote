@@ -5,7 +5,10 @@
     <string name="edit">Edit</string>
     <string name="view">View</string>
     <string name="separate">Separate</string>
+    <string name="delete">Delete</string>
+    <string name="file_output">File output</string>
     <string name="save_confirm_message">Save your changes?</string>
+    <string name="delete_confirm_message">Delete this memo?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="cancel">Cancel</string>

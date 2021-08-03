@@ -112,7 +112,11 @@ class EditorActivity : AppCompatActivity() {
                     markdown_editor_edittext,
                     markdown_rendering_result_textview
                 )
-            R.id.menu_complete ->
+            R.id.menu_delete -> {
+                showDeleteConfirmDialog()
+            }
+            R.id.menu_complete,
+            R.id.menu_complete_text ->
                 performComplete()
             else ->
                 return super.onOptionsItemSelected(item)
@@ -154,44 +158,88 @@ class EditorActivity : AppCompatActivity() {
         }
     }
 
+    private fun showDeleteConfirmDialog() {
+        // 削除確認ダイアログを起動
+        val dialog = CommonConfirmDialogFragment()
+        dialog.apply {
+            setArguments(
+                message = this@EditorActivity.getString(R.string.delete_confirm_message),
+                positiveText = this@EditorActivity.getString(R.string.yes),
+                negativeText = this@EditorActivity.getString(R.string.no),
+                listener = createDeleteConfirmDialogButtonClickListener()
+            )
+        }.show(supportFragmentManager, dialog::class.simpleName)
+    }
+
+    private fun createDeleteConfirmDialogButtonClickListener(): CommonConfirmDialogFragment.OnClickListener {
+        return object :
+            CommonConfirmDialogFragment.OnClickListener() {
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                when (which) {
+                    DialogInterface.BUTTON_POSITIVE -> {
+                        deleteMemo(this@EditorActivity, targetMemo!!) {
+                            logDebug("Deleted memo=[$targetMemo!!]")
+                            startActivity(TopActivity.createIntent(this@EditorActivity))
+                        }
+                    }
+//                    DialogInterface.BUTTON_NEGATIVE ->
+//                        startActivity(TopActivity.createIntent(this@EditorActivity))
+                }
+            }
+        }
+    }
+
     private fun performComplete() {
         if (!textEditedByUser) {
-            // ユーザーにより編集されていない場合は何もせず終了
+            // ユーザーにより編集されていない場合は何もせずエディタ画面終了
             startActivity(TopActivity.createIntent(this))
             return
         }
 
         val text = markdown_editor_edittext.text.toString()
         if (targetMemo == null) {
-            // 新規作成の場合は、入力済みの場合のみ保存
-            if (text.isEmpty()) {
-                // 空の場合は何もせず終了
+            // 新規作成の場合
+            performCompleteWhenNew(text)
+        } else {
+            // 編集の場合
+            performCompleteWhenEdit(text)
+        }
+    }
+
+    private fun performCompleteWhenNew(text: String) {
+        // 新規作成の場合は、入力済みの場合のみ保存
+
+        if (text.isEmpty()) {
+            // 空の場合は何もせずエディタ画面終了
+            startActivity(TopActivity.createIntent(this))
+        } else {
+            // 入力済みの場合は保存
+            insertMemo(this, text) {
+                logDebug("Inserted new memo=[$it]")
                 startActivity(TopActivity.createIntent(this))
-            } else {
-                insertMemo(this, text) {
-                    logDebug("Inserted new memo=[$it]")
-                    startActivity(TopActivity.createIntent(this))
-                }
+            }
+        }
+    }
+
+    private fun performCompleteWhenEdit(text: String) {
+        // 編集の場合は、更新 or 削除
+
+        val oldMemo = targetMemo!!
+        if (text.isEmpty()) {
+            // 空の場合は削除
+            deleteMemo(this, oldMemo) {
+                logDebug("Deleted memo=[$oldMemo]")
+                startActivity(TopActivity.createIntent(this))
             }
         } else {
-            // 編集の場合は、更新 or 削除
-            val oldMemo = targetMemo!!
-            if (text.isEmpty()) {
-                // 空の場合は削除
-                deleteMemo(this, oldMemo) {
-                    logDebug("Deleted memo=[$oldMemo]")
-                    startActivity(TopActivity.createIntent(this))
-                }
-            } else {
-                // 入力済みの場合は更新
-                val newMemo = oldMemo.copy(text = text, lastUpdatedDate = nowTimestampSec())
-                updateMemo(
-                    this,
-                    newMemo
-                ) {
-                    logDebug("Updated old memo=[$targetMemo] to new memo=[$it]")
-                    startActivity(TopActivity.createIntent(this))
-                }
+            // 入力済みの場合は更新
+            val newMemo = oldMemo.copy(text = text, lastUpdatedDate = nowTimestampSec())
+            updateMemo(
+                this,
+                newMemo
+            ) {
+                logDebug("Updated old memo=[$targetMemo] to new memo=[$it]")
+                startActivity(TopActivity.createIntent(this))
             }
         }
     }

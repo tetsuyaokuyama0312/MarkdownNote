@@ -21,4 +21,16 @@
         android:icon="@drawable/ic_complete"
         android:title="@string/complete"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_delete"
+        android:title="@string/delete"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_file_output"
+        android:title="@string/file_output"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_complete_text"
+        android:title="@string/complete"
+        app:showAsAction="never" />
 </menu>
