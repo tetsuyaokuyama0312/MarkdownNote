@@ -8,19 +8,13 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.RelativeLayout
-import android.widget.Space
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.to.markdownnote.model.Memo
 import com.to.markdownnote.repository.deleteMemo
 import com.to.markdownnote.repository.insertMemo
 import com.to.markdownnote.repository.updateMemo
-import com.to.markdownnote.util.logDebug
-import com.to.markdownnote.util.nowTimestampSec
-import com.to.markdownnote.util.parseMarkdownToHTML
-import com.to.markdownnote.util.renderHTML
+import com.to.markdownnote.util.*
 import kotlinx.android.synthetic.main.activity_editor.*
 
 class EditorActivity : AppCompatActivity() {
@@ -105,6 +99,12 @@ class EditorActivity : AppCompatActivity() {
                     markdown_editor_edittext,
                     markdown_rendering_result_textview
                 )
+            R.id.menu_file_output_plain_text ->
+                showFileOutputConfirmDialog(OutputFileType.PLAIN_TEXT)
+            R.id.menu_file_output_markdown ->
+                showFileOutputConfirmDialog(OutputFileType.MARKDOWN)
+            R.id.menu_file_output_html ->
+                showFileOutputConfirmDialog(OutputFileType.HTML)
             R.id.menu_delete ->
                 showDeleteConfirmDialog()
             R.id.menu_complete,
@@ -131,6 +131,29 @@ class EditorActivity : AppCompatActivity() {
         } else {
             finish()
         }
+    }
+
+    private fun showFileOutputConfirmDialog(outputFileType: OutputFileType) {
+        newFileOutputConfirmDialog(this, getOutputFileName(outputFileType),
+            {
+                val outText = outputFileType.convert(markdown_editor_edittext.text.toString())
+                runAsync(
+                    {
+                        writeTextFile(this, it, outText)
+                    },
+                    {
+                        logDebug("Saved file, location=$it, text=$outText")
+                        val msg =
+                            "${getString(R.string.saved_file_message)}\n$it"
+                        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+                    }
+                )
+            }
+        ).show()
+    }
+
+    private fun getOutputFileName(outputFileType: OutputFileType): String {
+        return "memo_${nowTimestampForFileName()}.${outputFileType.getExtension()}"
     }
 
     private fun showSaveConfirmDialog() {

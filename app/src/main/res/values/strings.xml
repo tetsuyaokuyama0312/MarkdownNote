@@ -9,6 +9,13 @@
     <string name="file_output">File output</string>
     <string name="save_confirm_message">Save your changes?</string>
     <string name="delete_confirm_message">Delete this memo?</string>
+    <string name="file_output_dialog_title">File output</string>
+    <string name="file_output_dialog_message">Enter file name and press output button</string>
+    <string name="plain_text">Plain text</string>
+    <string name="markdown">Markdown</string>
+    <string name="html">HTML</string>
+    <string name="saved_file_message">Saved file in following path</string>
+    <string name="output">Output</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="cancel">Cancel</string>

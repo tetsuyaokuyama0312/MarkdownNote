@@ -9,6 +9,13 @@
     <string name="file_output">ファイル出力</string>
     <string name="save_confirm_message">変更内容を保存しますか？</string>
     <string name="delete_confirm_message">このメモを削除してよろしいですか？</string>
+    <string name="file_output_dialog_title">ファイル出力</string>
+    <string name="file_output_dialog_message">ファイル名を入力して「出力」ボタンを押してください</string>
+    <string name="plain_text">プレーンテキスト</string>
+    <string name="markdown">Markdown</string>
+    <string name="html">HTML</string>
+    <string name="saved_file_message">ファイルを以下のパスに保存しました</string>
+    <string name="output">出力</string>
     <string name="yes">はい</string>
     <string name="no">いいえ</string>
     <string name="cancel">キャンセル</string>

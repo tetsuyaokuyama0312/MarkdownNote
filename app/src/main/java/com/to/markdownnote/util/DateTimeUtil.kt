@@ -18,6 +18,8 @@ val dateFormatExcludeYear = SimpleDateFormat("MM/dd")
 /** 時刻フォーマット: HH:mm */
 val timeFormat = SimpleDateFormat("HH:mm")
 
+val dateTimeFormatForFileName = SimpleDateFormat("yyyyMMdd_HHmmss")
+
 /** 曜日のR値リスト */
 val dayOfWeeks = listOf(
     R.string.sunday, R.string.monday, R.string.tuesday, R.string.wednesday,
@@ -29,7 +31,24 @@ val dayOfWeeks = listOf(
  *
  * @return 現在時刻のUNIX時間(秒)
  */
-fun nowTimestampSec(): Long = millisToSec(System.currentTimeMillis())
+fun nowTimestampMillis(): Long = System.currentTimeMillis()
+
+/**
+ * 現在時刻をUNIX時間(秒)で取得する。
+ *
+ * @return 現在時刻のUNIX時間(秒)
+ */
+fun nowTimestampSec(): Long = millisToSec(nowTimestampMillis())
+
+/**
+ * 現在時刻をUNIX時間(秒)で取得する。
+ *
+ * @return 現在時刻のUNIX時間(秒)
+ */
+fun nowTimestampForFileName(): String {
+    val date = Date(nowTimestampMillis())
+    return dateTimeFormatForFileName.format(date)
+}
 
 /**
  * timestampから、日付を表す文字列と時刻を表す文字列を取得する。

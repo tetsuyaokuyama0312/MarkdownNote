@@ -28,7 +28,19 @@
     <item
         android:id="@+id/menu_file_output"
         android:title="@string/file_output"
-        app:showAsAction="never" />
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/menu_file_output_plain_text"
+                android:title="@string/plain_text" />
+            <item
+                android:id="@+id/menu_file_output_markdown"
+                android:title="@string/markdown" />
+            <item
+                android:id="@+id/menu_file_output_html"
+                android:title="@string/html" />
+        </menu>
+    </item>
     <item
         android:id="@+id/menu_complete_text"
         android:title="@string/complete"
