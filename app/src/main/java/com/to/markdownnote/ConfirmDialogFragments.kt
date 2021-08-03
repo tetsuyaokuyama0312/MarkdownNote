@@ -90,9 +90,13 @@ fun newFileOutputConfirmDialog(
     ).apply {
         setMargins(16, 8, 16, 8)
     }
+
+    val idxBaseNameEnd = initialFileName.lastIndexOf('.')
     val editText = EditText(context).apply {
         setLayoutParams(layoutParams)
         setText(initialFileName)
+        requestFocus()
+        setSelection(0, idxBaseNameEnd)
     }
 
     return newConfirmDialogWithView(
