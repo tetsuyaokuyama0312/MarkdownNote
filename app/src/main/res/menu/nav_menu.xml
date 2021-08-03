@@ -33,4 +33,8 @@
         android:id="@+id/menu_complete_text"
         android:title="@string/complete"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_cancel"
+        android:title="@string/cancel"
+        app:showAsAction="never" />
 </menu>

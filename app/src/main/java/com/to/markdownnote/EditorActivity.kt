@@ -1,7 +1,6 @@
 package com.to.markdownnote
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -50,7 +49,7 @@ class EditorActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editor)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setTitle(R.string.editor)
+        supportActionBar?.title = null
 
         targetMemo = intent.getParcelableExtra(MEMO_KEY)
 
@@ -86,14 +85,8 @@ class EditorActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> {
-                if (textEditedByUser) {
-                    // ユーザーによって編集されていればダイアログ表示
-                    showSaveConfirmDialog()
-                } else {
-                    finish()
-                }
-            }
+            android.R.id.home ->
+                onHomeButtonClicked()
             R.id.menu_edit ->
                 ScreenMode.EDIT.apply(
                     vertical_separator,
@@ -112,12 +105,14 @@ class EditorActivity : AppCompatActivity() {
                     markdown_editor_edittext,
                     markdown_rendering_result_textview
                 )
-            R.id.menu_delete -> {
+            R.id.menu_delete ->
                 showDeleteConfirmDialog()
-            }
             R.id.menu_complete,
             R.id.menu_complete_text ->
                 performComplete()
+            R.id.menu_cancel ->
+                // キャンセルは何もせず閉じる
+                return true
             else ->
                 return super.onOptionsItemSelected(item)
         }
@@ -129,64 +124,32 @@ class EditorActivity : AppCompatActivity() {
         renderHTML(markdown_rendering_result_textview, html)
     }
 
-    private fun showSaveConfirmDialog() {
-        // 保存確認ダイアログを起動
-        val dialog = CommonConfirmDialogFragment()
-        dialog.apply {
-            setArguments(
-                message = this@EditorActivity.getString(R.string.save_confirm_message),
-                positiveText = this@EditorActivity.getString(R.string.yes),
-                negativeText = this@EditorActivity.getString(R.string.no),
-                neutralText = this@EditorActivity.getString(R.string.cancel),
-                listener = createSaveConfirmDialogButtonClickListener()
-            )
-        }.show(supportFragmentManager, dialog::class.simpleName)
+    private fun onHomeButtonClicked() {
+        if (textEditedByUser) {
+            // ユーザーによって編集されていればダイアログ表示
+            showSaveConfirmDialog()
+        } else {
+            finish()
+        }
     }
 
-    private fun createSaveConfirmDialogButtonClickListener(): CommonConfirmDialogFragment.OnClickListener {
-        return object :
-            CommonConfirmDialogFragment.OnClickListener() {
-            override fun onClick(dialog: DialogInterface?, which: Int) {
-                when (which) {
-                    DialogInterface.BUTTON_POSITIVE -> {
-                        performComplete()
-                    }
-                    DialogInterface.BUTTON_NEGATIVE ->
-                        startActivity(TopActivity.createIntent(this@EditorActivity))
-                }
-            }
-        }
+    private fun showSaveConfirmDialog() {
+        // 保存確認ダイアログを起動
+        val dialog = newSaveConfirmDialogFragment(this,
+            { performComplete() },
+            { startActivity(TopActivity.createIntent(this)) })
+        dialog.show(supportFragmentManager, dialog::class.simpleName)
     }
 
     private fun showDeleteConfirmDialog() {
         // 削除確認ダイアログを起動
-        val dialog = CommonConfirmDialogFragment()
-        dialog.apply {
-            setArguments(
-                message = this@EditorActivity.getString(R.string.delete_confirm_message),
-                positiveText = this@EditorActivity.getString(R.string.yes),
-                negativeText = this@EditorActivity.getString(R.string.no),
-                listener = createDeleteConfirmDialogButtonClickListener()
-            )
-        }.show(supportFragmentManager, dialog::class.simpleName)
-    }
-
-    private fun createDeleteConfirmDialogButtonClickListener(): CommonConfirmDialogFragment.OnClickListener {
-        return object :
-            CommonConfirmDialogFragment.OnClickListener() {
-            override fun onClick(dialog: DialogInterface?, which: Int) {
-                when (which) {
-                    DialogInterface.BUTTON_POSITIVE -> {
-                        deleteMemo(this@EditorActivity, targetMemo!!) {
-                            logDebug("Deleted memo=[$targetMemo!!]")
-                            startActivity(TopActivity.createIntent(this@EditorActivity))
-                        }
-                    }
-//                    DialogInterface.BUTTON_NEGATIVE ->
-//                        startActivity(TopActivity.createIntent(this@EditorActivity))
-                }
+        val dialog = newDeleteConfirmDialogFragment(this, {
+            deleteMemo(this, targetMemo!!) {
+                logDebug("Deleted memo=[$targetMemo!!]")
+                startActivity(TopActivity.createIntent(this))
             }
-        }
+        })
+        dialog.show(supportFragmentManager, dialog::class.simpleName)
     }
 
     private fun performComplete() {
