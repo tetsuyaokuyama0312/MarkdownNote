@@ -14,11 +14,16 @@ class MemoRow(
 ) : Item<GroupieViewHolder>() {
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        val textFirstLine = memo.text.split("\n")[0]
+        val textLines = memo.text.split(System.lineSeparator()).filter { it.isNotBlank() }
+        val textFirstLine = textLines.firstOrNull() ?: context.getString(R.string.new_memo)
+        val textSecondLine =
+            textLines.drop(1).firstOrNull() ?: context.getString(R.string.no_additional_text)
         val (date, time) = getFormattedDateTime(context, memo.lastUpdatedDate)
 
         val titleTextView = viewHolder.itemView.markdown_file_title_textview
         titleTextView.text = textFirstLine
+        val secondLineTextView = viewHolder.itemView.memo_second_line_textview
+        secondLineTextView.text = textSecondLine
         val dateTextView = viewHolder.itemView.date_textview_latest_message
         dateTextView.text = date
         val timeTextView = viewHolder.itemView.time_textview_latest_message

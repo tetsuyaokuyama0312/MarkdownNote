@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">MarkdownNote</string>
+    <string name="new_memo">新規メモ</string>
+    <string name="no_additional_text">追加テキストなし</string>
     <string name="editor">エディタ</string>
     <string name="complete">完了</string>
     <string name="edit">編集</string>
