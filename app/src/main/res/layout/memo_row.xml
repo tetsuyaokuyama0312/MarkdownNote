@@ -3,20 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingBottom="16dp">
+    android:layout_height="70dp"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/markdown_file_title_textview"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
         android:maxWidth="250dp"
+        android:maxLength="30"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="# Title sample" />
@@ -38,20 +40,5 @@
         app:layout_constraintEnd_toEndOf="@+id/date_textview_latest_message"
         app:layout_constraintTop_toBottomOf="@+id/date_textview_latest_message"
         tools:text="HH:mm" />
-
-    <Button
-        android:id="@+id/delete_button_memo_row"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        android:background="@color/colorAccent"
-        android:text="@string/delete"
-        android:textColor="@android:color/white"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time_textview_latest_message" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

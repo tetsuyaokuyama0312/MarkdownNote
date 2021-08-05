@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.to.markdownnote.repository.deleteMemo
 import com.to.markdownnote.repository.selectAllMemo
 import com.to.markdownnote.util.logDebug
@@ -12,7 +14,6 @@ import com.to.markdownnote.view.MemoRow
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.memo_row.*
 
 class TopActivity : AppCompatActivity() {
     companion object {
@@ -26,8 +27,6 @@ class TopActivity : AppCompatActivity() {
             return Intent(context, TopActivity::class.java)
         }
     }
-
-    private var memoRowList: MutableList<MemoRow> = mutableListOf()
 
     /** メモリストのAdapter */
     private val memoRowAdapter = GroupAdapter<GroupieViewHolder>()
@@ -45,60 +44,54 @@ class TopActivity : AppCompatActivity() {
             )
         )
 
-        loadMemoList()
+        loadAllMemo()
 
         memoRowAdapter.setOnItemClickListener { item, view ->
-            if (isAnyDeleteButtonVisible()) {
-                setAllDeleteButtonInvisible()
-            } else {
-                val memoRow = item as MemoRow
-                startActivity(EditorActivity.createIntent(view.context, memoRow.memo))
+            val memoRow = item as MemoRow
+            startActivity(EditorActivity.createIntent(view.context, memoRow.memo))
+        }
+
+        // スワイプのコールバック設定
+        val swipeCallback = object : SwipeToDeleteCallback(this@TopActivity) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val memoRow = memoRowAdapter.getItem(position) as MemoRow
+                showDeleteConfirmDialog(memoRow, position)
             }
         }
-        memoRowAdapter.setOnItemLongClickListener { item, _ ->
-            val memoRow = item as MemoRow
-            memoRow.deleteButtonVisible = !memoRow.deleteButtonVisible
-            return@setOnItemLongClickListener true
-        }
+        val itemTouchHelper = ItemTouchHelper(swipeCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerview_text_list)
 
         new_memo_fab.setOnClickListener {
             startActivity(EditorActivity.createIntent(it.context))
         }
     }
 
-    private fun loadMemoList() {
+    private fun loadAllMemo() {
         memoRowAdapter.clear()
 
         selectAllMemo(this) { memoList ->
             memoList.sortedByDescending { it.lastUpdatedDate }
                 .forEach {
                     logDebug("Select memo: $it")
-                    val memoRow = MemoRow(this, it, ::showDeleteConfirmDialog)
-                    memoRowList.add(memoRow)
-                    memoRowAdapter.add(memoRow)
+                    memoRowAdapter.add(MemoRow(this, it))
                 }
         }
     }
 
-    private fun showDeleteConfirmDialog(memoRow: MemoRow) {
+    private fun showDeleteConfirmDialog(memoRow: MemoRow, memoRowPos: Int) {
         val memo = memoRow.memo
         // 削除確認ダイアログを起動
         val dialog = newDeleteConfirmDialogFragment(this, {
+            // メモを削除
             deleteMemo(this, memo) {
                 logDebug("Deleted memo=[$memo]")
                 memoRowAdapter.remove(memoRow)
             }
-        })
-        dialog.show(supportFragmentManager, dialog::class.simpleName)
-    }
-
-    private fun isAnyDeleteButtonVisible(): Boolean {
-        return memoRowList.any { it.deleteButtonVisible }
-    }
-
-    private fun setAllDeleteButtonInvisible() {
-        memoRowList.forEach {
-            it.deleteButtonVisible = false
+        }) {
+            // レコードのスワイプを元に戻す
+            memoRowAdapter.notifyItemChanged(memoRowPos)
         }
+        dialog.show(supportFragmentManager, dialog::class.simpleName)
     }
 }
