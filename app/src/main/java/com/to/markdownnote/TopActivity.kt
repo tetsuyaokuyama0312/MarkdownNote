@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.to.markdownnote.databinding.ActivityMainBinding
+import com.to.markdownnote.databinding.ActivityTopBinding
 import com.to.markdownnote.repository.deleteMemo
 import com.to.markdownnote.repository.selectAllMemo
 import com.to.markdownnote.util.logDebug
@@ -28,19 +28,19 @@ class TopActivity : AppCompatActivity() {
         }
     }
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityTopBinding
 
     /** メモリストのAdapter */
     private val memoRowAdapter = GroupAdapter<GroupieViewHolder>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityTopBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.recyclerviewTextList.adapter = memoRowAdapter
-        binding.recyclerviewTextList.isFocusable = false
-        binding.recyclerviewTextList.addItemDecoration(
+        binding.memoListRecyclerView.adapter = memoRowAdapter
+        binding.memoListRecyclerView.isFocusable = false
+        binding.memoListRecyclerView.addItemDecoration(
             DividerItemDecoration(
                 this,
                 DividerItemDecoration.VERTICAL
@@ -63,7 +63,7 @@ class TopActivity : AppCompatActivity() {
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeCallback)
-        itemTouchHelper.attachToRecyclerView(binding.recyclerviewTextList)
+        itemTouchHelper.attachToRecyclerView(binding.memoListRecyclerView)
 
         binding.newMemoFab.setOnClickListener {
             startActivity(EditorActivity.createIntent(it.context))

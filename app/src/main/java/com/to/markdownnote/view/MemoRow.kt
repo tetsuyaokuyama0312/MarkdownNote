@@ -24,10 +24,10 @@ class MemoRow(
             textLines.drop(1).firstOrNull() ?: context.getString(R.string.no_additional_text)
         val (date, time) = getFormattedDateTime(context, memo.lastUpdatedDate)
 
-        binding.markdownFileTitleTextview.text = textFirstLine
-        binding.memoSecondLineTextview.text = textSecondLine
-        binding.dateTextviewLatestMessage.text = date
-        binding.timeTextviewLatestMessage.text = time
+        binding.memoFirstLineTextView.text = textFirstLine
+        binding.memoSecondLineTextView.text = textSecondLine
+        binding.memoDateTextView.text = date
+        binding.memoTimeTextView.text = time
     }
 
     override fun getLayout(): Int {

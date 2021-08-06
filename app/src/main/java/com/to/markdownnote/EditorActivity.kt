@@ -50,7 +50,7 @@ class EditorActivity : AppCompatActivity() {
 
         targetMemo = intent.getParcelableExtra(MEMO_KEY)
 
-        binding.markdownEditorEdittext.addTextChangedListener(object : TextWatcher {
+        binding.markdownEditorEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 renderMarkdown(s.toString())
                 textEditedByUser = true
@@ -68,7 +68,7 @@ class EditorActivity : AppCompatActivity() {
         })
 
         // 保存済みのテキストをセット
-        binding.markdownEditorEdittext.setText(targetMemo?.text ?: "")
+        binding.markdownEditorEditText.setText(targetMemo?.text ?: "")
         // ユーザーによる入力ではないのでfalseに
         textEditedByUser = false
 
@@ -76,7 +76,7 @@ class EditorActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.nav_menu, menu)
+        menuInflater.inflate(R.menu.editor_menu, menu)
         return true
     }
 
@@ -86,21 +86,21 @@ class EditorActivity : AppCompatActivity() {
                 onHomeButtonClicked()
             R.id.menu_edit ->
                 ScreenMode.EDIT.apply(
-                    binding.verticalSeparator,
-                    binding.markdownEditorEdittext,
-                    binding.markdownRenderingResultTextview
+                    binding.editorVerticalSeparator,
+                    binding.markdownEditorEditText,
+                    binding.markdownRenderingResultTextView
                 )
             R.id.menu_separate ->
                 ScreenMode.SEPARATE.apply(
-                    binding.verticalSeparator,
-                    binding.markdownEditorEdittext,
-                    binding.markdownRenderingResultTextview
+                    binding.editorVerticalSeparator,
+                    binding.markdownEditorEditText,
+                    binding.markdownRenderingResultTextView
                 )
             R.id.menu_view ->
                 ScreenMode.VIEW.apply(
-                    binding.verticalSeparator,
-                    binding.markdownEditorEdittext,
-                    binding.markdownRenderingResultTextview
+                    binding.editorVerticalSeparator,
+                    binding.markdownEditorEditText,
+                    binding.markdownRenderingResultTextView
                 )
             R.id.menu_file_output_plain_text ->
                 showFileOutputConfirmDialog(OutputFileType.PLAIN_TEXT)
@@ -124,7 +124,7 @@ class EditorActivity : AppCompatActivity() {
 
     private fun renderMarkdown(text: String) {
         val html = parseMarkdownToHTML(text)
-        renderHTML(binding.markdownRenderingResultTextview, html)
+        renderHTML(binding.markdownRenderingResultTextView, html)
     }
 
     private fun onHomeButtonClicked() {
@@ -139,7 +139,7 @@ class EditorActivity : AppCompatActivity() {
     private fun showFileOutputConfirmDialog(outputFileType: OutputFileType) {
         newFileOutputConfirmDialog(this, getOutputFileName(outputFileType),
             {
-                val outText = outputFileType.convert(binding.markdownEditorEdittext.text.toString())
+                val outText = outputFileType.convert(binding.markdownEditorEditText.text.toString())
                 runAsync(
                     {
                         writeTextFile(this, it, outText)
@@ -185,7 +185,7 @@ class EditorActivity : AppCompatActivity() {
             return
         }
 
-        val text = binding.markdownRenderingResultTextview.text.toString()
+        val text = binding.markdownRenderingResultTextView.text.toString()
         if (targetMemo == null) {
             // 新規作成の場合
             performCompleteWhenNew(text)

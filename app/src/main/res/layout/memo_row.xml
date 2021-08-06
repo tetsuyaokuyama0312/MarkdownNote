@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/markdown_file_title_textview"
+        android:id="@+id/memo_first_line_text_view"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -22,7 +22,7 @@
         tools:text="# This is the first line" />
 
     <TextView
-        android:id="@+id/memo_second_line_textview"
+        android:id="@+id/memo_second_line_text_view"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -33,12 +33,12 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/markdown_file_title_textview"
-        app:layout_constraintTop_toBottomOf="@+id/markdown_file_title_textview"
+        app:layout_constraintStart_toStartOf="@+id/memo_first_line_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/memo_first_line_text_view"
         tools:text="## This is the second line" />
 
     <TextView
-        android:id="@+id/date_textview_latest_message"
+        android:id="@+id/memo_date_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -48,11 +48,11 @@
         tools:text="yyyy/MM/dd(day)" />
 
     <TextView
-        android:id="@+id/time_textview_latest_message"
+        android:id="@+id/memo_time_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@+id/date_textview_latest_message"
-        app:layout_constraintTop_toBottomOf="@+id/date_textview_latest_message"
+        app:layout_constraintEnd_toEndOf="@+id/memo_date_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/memo_date_text_view"
         tools:text="HH:mm" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
