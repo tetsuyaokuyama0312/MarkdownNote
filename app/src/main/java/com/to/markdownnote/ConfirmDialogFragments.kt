@@ -8,10 +8,15 @@ import android.widget.EditText
 import android.widget.LinearLayout
 
 fun newCommonConfirmDialogFragment(
-    title: String? = null, message: String, positiveText: String? = null,
-    negativeText: String? = null, neutralText: String? = null, onPositiveClick: () -> Unit = {},
+    title: String? = null,
+    message: String,
+    positiveText: String? = null,
+    negativeText: String? = null,
+    neutralText: String? = null,
+    onPositiveClick: () -> Unit = {},
     onNegativeClick: () -> Unit = {},
-    onNeutralClick: () -> Unit = {}
+    onNeutralClick: () -> Unit = {},
+    canceledOnTouchOutside: Boolean = false
 ): CommonConfirmDialogFragment {
     return CommonConfirmDialogFragment().apply {
         setArguments(
@@ -20,7 +25,8 @@ fun newCommonConfirmDialogFragment(
             positiveText = positiveText,
             negativeText = negativeText,
             neutralText = neutralText,
-            listener = createListener(onPositiveClick, onNegativeClick, onNeutralClick)
+            listener = createListener(onPositiveClick, onNegativeClick, onNeutralClick),
+            canceledOnTouchOutside = canceledOnTouchOutside
         )
     }
 }
@@ -29,7 +35,8 @@ fun newSaveConfirmDialogFragment(
     context: Context,
     onPositiveClick: () -> Unit = {},
     onNegativeClick: () -> Unit = {},
-    onNeutralClick: () -> Unit = {}
+    onNeutralClick: () -> Unit = {},
+    canceledOnTouchOutside: Boolean = false
 ): CommonConfirmDialogFragment {
     return newCommonConfirmDialogFragment(
         message = context.getString(R.string.save_confirm_message),
@@ -38,21 +45,24 @@ fun newSaveConfirmDialogFragment(
         neutralText = context.getString(R.string.cancel),
         onPositiveClick = onPositiveClick,
         onNegativeClick = onNegativeClick,
-        onNeutralClick = onNeutralClick
+        onNeutralClick = onNeutralClick,
+        canceledOnTouchOutside = canceledOnTouchOutside
     )
 }
 
 fun newDeleteConfirmDialogFragment(
     context: Context,
     onPositiveClick: () -> Unit = {},
-    onNegativeClick: () -> Unit = {}
+    onNegativeClick: () -> Unit = {},
+    canceledOnTouchOutside: Boolean = false
 ): CommonConfirmDialogFragment {
     return newCommonConfirmDialogFragment(
         message = context.getString(R.string.delete_confirm_message),
         positiveText = context.getString(R.string.yes),
         negativeText = context.getString(R.string.no),
         onPositiveClick = onPositiveClick,
-        onNegativeClick = onNegativeClick
+        onNegativeClick = onNegativeClick,
+        canceledOnTouchOutside = canceledOnTouchOutside
     )
 }
 
@@ -65,7 +75,7 @@ fun newConfirmDialogWithView(
     onNegativeClick: () -> Unit = {},
     onNeutralClick: () -> Unit = {}
 ): AlertDialog {
-    val listener = createListenerWithView(view, onPositiveClick, onNegativeClick, onNeutralClick)
+    val listener = createListenerWithView(onPositiveClick, onNegativeClick, onNeutralClick)
     return AlertDialog.Builder(context)
         .setTitle(title)
         .setMessage(message)
@@ -131,7 +141,6 @@ private fun createListener(
 }
 
 private fun createListenerWithView(
-    view: View,
     onPositiveClick: () -> Unit = {},
     onNegativeClick: () -> Unit = {},
     onNeutralClick: () -> Unit = {}

@@ -88,10 +88,10 @@ class TopActivity : AppCompatActivity() {
                 logDebug("Deleted memo=[$memo]")
                 memoRowAdapter.remove(memoRow)
             }
-        }) {
+        }, {
             // レコードのスワイプを元に戻す
             memoRowAdapter.notifyItemChanged(memoRowPos)
-        }
+        })
         dialog.show(supportFragmentManager, dialog::class.simpleName)
     }
 }

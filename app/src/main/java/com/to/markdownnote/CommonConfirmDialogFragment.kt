@@ -31,6 +31,7 @@ class CommonConfirmDialogFragment : DialogFragment() {
         private const val NEGATIVE_TEXT_KEY = "NEGATIVE_TEXT"
         private const val NEUTRAL_TEXT_KEY = "NEUTRAL_TEXT"
         private const val LISTENER_KEY = "LISTENER"
+        private const val CANCELED_ON_TOUCH_OUTSIDE_KEY = "CANCELED_ON_TOUCH_OUTSIDE"
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -42,6 +43,7 @@ class CommonConfirmDialogFragment : DialogFragment() {
         val neutralText = arguments?.getString(NEUTRAL_TEXT_KEY)
         val listener =
             arguments?.getParcelable(LISTENER_KEY) ?: OnClickListener()
+        val canceledOnTouchOutside = arguments?.getBoolean(CANCELED_ON_TOUCH_OUTSIDE_KEY) ?: false
 
         return activity?.let {
             val builder = AlertDialog.Builder(it)
@@ -51,6 +53,8 @@ class CommonConfirmDialogFragment : DialogFragment() {
             builder.setNegativeButton(negativeText, listener)
             builder.setNeutralButton(neutralText, listener)
             builder.create()
+        }?.apply {
+            setCanceledOnTouchOutside(canceledOnTouchOutside)
         } ?: throw IllegalStateException("Activity must not be null")
     }
 
@@ -63,11 +67,12 @@ class CommonConfirmDialogFragment : DialogFragment() {
      * @param negativeText ネガティブボタンのテキスト
      * @param neutralText ニュートラルボタンのテキスト
      * @param listener ダイアログのボタンクリック時に呼び出されるコールバックリスナ
+     * @param canceledOnTouchOutside ダイアログ外の領域をタッチした際にキャンセル扱いにするかどうか
      */
     fun setArguments(
         title: String? = null, message: String, positiveText: String? = null,
         negativeText: String? = null, neutralText: String? = null,
-        listener: OnClickListener? = null
+        listener: OnClickListener? = null, canceledOnTouchOutside: Boolean = false
     ) {
         if (positiveText == null && negativeText == null && neutralText == null) {
             throw IllegalArgumentException("Either positiveText, negativeText or neutralText must not be null")
@@ -80,6 +85,7 @@ class CommonConfirmDialogFragment : DialogFragment() {
             putString(NEGATIVE_TEXT_KEY, negativeText)
             putString(NEUTRAL_TEXT_KEY, neutralText)
             putParcelable(LISTENER_KEY, listener)
+            putBoolean(CANCELED_ON_TOUCH_OUTSIDE_KEY, canceledOnTouchOutside)
         }
     }
 
@@ -89,9 +95,8 @@ class CommonConfirmDialogFragment : DialogFragment() {
      * 共通確認ダイアログを利用するクラスは、このクラスの`onClick`メソッドをオーバーライドして、
      * ダイアログがクリックされた時のコールバック処理を実装する。
      */
-    open class OnClickListener() : DialogInterface.OnClickListener,
+    open class OnClickListener : DialogInterface.OnClickListener,
         Parcelable {
-        constructor(parcel: Parcel) : this()
 
         override fun onClick(dialog: DialogInterface?, which: Int) {}
 
@@ -103,7 +108,7 @@ class CommonConfirmDialogFragment : DialogFragment() {
 
         companion object CREATOR : Parcelable.Creator<OnClickListener> {
             override fun createFromParcel(parcel: Parcel): OnClickListener {
-                return OnClickListener(parcel)
+                return OnClickListener()
             }
 
             override fun newArray(size: Int): Array<OnClickListener?> {
