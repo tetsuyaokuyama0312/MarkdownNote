@@ -7,13 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.to.markdownnote.databinding.ActivityMainBinding
 import com.to.markdownnote.repository.deleteMemo
 import com.to.markdownnote.repository.selectAllMemo
 import com.to.markdownnote.util.logDebug
 import com.to.markdownnote.view.MemoRow
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import kotlinx.android.synthetic.main.activity_main.*
 
 class TopActivity : AppCompatActivity() {
     companion object {
@@ -28,16 +28,19 @@ class TopActivity : AppCompatActivity() {
         }
     }
 
+    private lateinit var binding: ActivityMainBinding
+
     /** メモリストのAdapter */
     private val memoRowAdapter = GroupAdapter<GroupieViewHolder>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        recyclerview_text_list.adapter = memoRowAdapter
-        recyclerview_text_list.isFocusable = false
-        recyclerview_text_list.addItemDecoration(
+        binding.recyclerviewTextList.adapter = memoRowAdapter
+        binding.recyclerviewTextList.isFocusable = false
+        binding.recyclerviewTextList.addItemDecoration(
             DividerItemDecoration(
                 this,
                 DividerItemDecoration.VERTICAL
@@ -60,9 +63,9 @@ class TopActivity : AppCompatActivity() {
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeCallback)
-        itemTouchHelper.attachToRecyclerView(recyclerview_text_list)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerviewTextList)
 
-        new_memo_fab.setOnClickListener {
+        binding.newMemoFab.setOnClickListener {
             startActivity(EditorActivity.createIntent(it.context))
         }
     }

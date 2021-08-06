@@ -1,8 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'kotlin-android-extensions'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -36,6 +36,9 @@ android {
         exclude 'META-INF/LICENSE-LGPL-3.txt'
         exclude 'META-INF/LICENSE-W3C-TEST'
         exclude 'META-INF/DEPENDENCIES'
+    }
+    buildFeatures {
+        viewBinding = true
     }
 }
 

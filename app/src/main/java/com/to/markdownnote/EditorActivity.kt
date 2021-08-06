@@ -10,12 +10,12 @@ import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.to.markdownnote.databinding.ActivityEditorBinding
 import com.to.markdownnote.model.Memo
 import com.to.markdownnote.repository.deleteMemo
 import com.to.markdownnote.repository.insertMemo
 import com.to.markdownnote.repository.updateMemo
 import com.to.markdownnote.util.*
-import kotlinx.android.synthetic.main.activity_editor.*
 
 class EditorActivity : AppCompatActivity() {
     companion object {
@@ -35,19 +35,22 @@ class EditorActivity : AppCompatActivity() {
         }
     }
 
+    private lateinit var binding: ActivityEditorBinding
+
     private var targetMemo: Memo? = null
 
     private var textEditedByUser: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_editor)
+        binding = ActivityEditorBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = null
 
         targetMemo = intent.getParcelableExtra(MEMO_KEY)
 
-        markdown_editor_edittext.addTextChangedListener(object : TextWatcher {
+        binding.markdownEditorEdittext.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 renderMarkdown(s.toString())
                 textEditedByUser = true
@@ -65,7 +68,7 @@ class EditorActivity : AppCompatActivity() {
         })
 
         // 保存済みのテキストをセット
-        markdown_editor_edittext.setText(targetMemo?.text ?: "")
+        binding.markdownEditorEdittext.setText(targetMemo?.text ?: "")
         // ユーザーによる入力ではないのでfalseに
         textEditedByUser = false
 
@@ -83,21 +86,21 @@ class EditorActivity : AppCompatActivity() {
                 onHomeButtonClicked()
             R.id.menu_edit ->
                 ScreenMode.EDIT.apply(
-                    vertical_separator,
-                    markdown_editor_edittext,
-                    markdown_rendering_result_textview
+                    binding.verticalSeparator,
+                    binding.markdownEditorEdittext,
+                    binding.markdownRenderingResultTextview
                 )
             R.id.menu_separate ->
                 ScreenMode.SEPARATE.apply(
-                    vertical_separator,
-                    markdown_editor_edittext,
-                    markdown_rendering_result_textview
+                    binding.verticalSeparator,
+                    binding.markdownEditorEdittext,
+                    binding.markdownRenderingResultTextview
                 )
             R.id.menu_view ->
                 ScreenMode.VIEW.apply(
-                    vertical_separator,
-                    markdown_editor_edittext,
-                    markdown_rendering_result_textview
+                    binding.verticalSeparator,
+                    binding.markdownEditorEdittext,
+                    binding.markdownRenderingResultTextview
                 )
             R.id.menu_file_output_plain_text ->
                 showFileOutputConfirmDialog(OutputFileType.PLAIN_TEXT)
@@ -121,7 +124,7 @@ class EditorActivity : AppCompatActivity() {
 
     private fun renderMarkdown(text: String) {
         val html = parseMarkdownToHTML(text)
-        renderHTML(markdown_rendering_result_textview, html)
+        renderHTML(binding.markdownRenderingResultTextview, html)
     }
 
     private fun onHomeButtonClicked() {
@@ -136,7 +139,7 @@ class EditorActivity : AppCompatActivity() {
     private fun showFileOutputConfirmDialog(outputFileType: OutputFileType) {
         newFileOutputConfirmDialog(this, getOutputFileName(outputFileType),
             {
-                val outText = outputFileType.convert(markdown_editor_edittext.text.toString())
+                val outText = outputFileType.convert(binding.markdownEditorEdittext.text.toString())
                 runAsync(
                     {
                         writeTextFile(this, it, outText)
@@ -182,7 +185,7 @@ class EditorActivity : AppCompatActivity() {
             return
         }
 
-        val text = markdown_editor_edittext.text.toString()
+        val text = binding.markdownRenderingResultTextview.text.toString()
         if (targetMemo == null) {
             // 新規作成の場合
             performCompleteWhenNew(text)
