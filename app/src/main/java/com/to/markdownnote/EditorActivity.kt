@@ -194,7 +194,7 @@ class EditorActivity : AppCompatActivity() {
             performCompleteWhenNew(text)
         } else {
             // 編集の場合
-            performCompleteWhenEdit(text)
+            performCompleteWhenEdit(text, targetMemo!!)
         }
     }
 
@@ -213,10 +213,9 @@ class EditorActivity : AppCompatActivity() {
         }
     }
 
-    private fun performCompleteWhenEdit(text: String) {
+    private fun performCompleteWhenEdit(text: String, oldMemo: Memo) {
         // 編集の場合は、更新 or 削除
 
-        val oldMemo = targetMemo!!
         if (text.isEmpty()) {
             // 空の場合は削除
             deleteMemo(this, oldMemo) {
