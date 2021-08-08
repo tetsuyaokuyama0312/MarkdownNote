@@ -54,7 +54,6 @@ class EditorActivity : AppCompatActivity() {
 
         binding.markdownRenderingResultTextView.movementMethod =
             ScrollingMovementMethod.getInstance()
-        binding.markdownRenderingResultTextView.scrollTo(0, 0)
 
         binding.markdownEditorEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -62,9 +61,12 @@ class EditorActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
-                renderMarkdown(s.toString())
+                val text = s.toString()
+                // Markdownレンダリング
+                renderMarkdown(text)
+                // ResultViewをスクロール
+                scrollResultTextView(text)
                 textEditedByUser = true
-                binding.markdownRenderingResultTextView.gravity = Gravity.BOTTOM
             }
         })
 
@@ -72,8 +74,6 @@ class EditorActivity : AppCompatActivity() {
         binding.markdownEditorEditText.setText(targetMemo?.text ?: "")
         // ユーザーによる入力ではないのでfalseに
         textEditedByUser = false
-        // スクロール位置を最上部にセット
-        binding.markdownRenderingResultTextView.gravity = Gravity.NO_GRAVITY
 
         logDebug("target memo is $targetMemo")
     }
@@ -86,7 +86,7 @@ class EditorActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home ->
-                onHomeButtonClicked()
+                performToHome()
             R.id.menu_edit ->
                 ScreenMode.EDIT.apply(
                     binding.editorVerticalSeparator,
@@ -130,7 +130,28 @@ class EditorActivity : AppCompatActivity() {
         renderHTML(binding.markdownRenderingResultTextView, html)
     }
 
-    private fun onHomeButtonClicked() {
+    private fun scrollResultTextView(text: String) {
+        // EditTextのカーソル位置を取得
+        val cursorPos = binding.markdownEditorEditText.selectionEnd
+
+        if (cursorPos == text.length) {
+            // 末尾への追記の場合は最下部へスクロール
+            binding.markdownRenderingResultTextView.gravity = Gravity.BOTTOM
+        } else {
+            // それ以外の場合は編集した行番号に応じてスクロール
+
+            // 編集した行番号を取得
+            val lineNr = text.substring(0, cursorPos).split(System.lineSeparator()).size
+            binding.markdownRenderingResultTextView.post {
+                // 行番号からスクロール位置を求めてスクロール
+                val scrollY =
+                    binding.markdownRenderingResultTextView.layout.getLineTop(lineNr - 1)
+                binding.markdownRenderingResultTextView.scrollTo(0, scrollY)
+            }
+        }
+    }
+
+    private fun performToHome() {
         if (textEditedByUser) {
             // ユーザーによって編集されていればダイアログ表示
             showSaveConfirmDialog()
