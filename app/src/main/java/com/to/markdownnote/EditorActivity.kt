@@ -188,7 +188,7 @@ class EditorActivity : AppCompatActivity() {
             return
         }
 
-        val text = binding.markdownRenderingResultTextView.text.toString()
+        val text = binding.markdownEditorEditText.text.toString()
         if (targetMemo == null) {
             // 新規作成の場合
             performCompleteWhenNew(text)
