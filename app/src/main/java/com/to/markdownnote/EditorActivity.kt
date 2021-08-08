@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.method.ScrollingMovementMethod
+import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
@@ -50,20 +52,19 @@ class EditorActivity : AppCompatActivity() {
 
         targetMemo = intent.getParcelableExtra(MEMO_KEY)
 
-        binding.markdownEditorEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                renderMarkdown(s.toString())
-                textEditedByUser = true
-            }
+        binding.markdownRenderingResultTextView.movementMethod =
+            ScrollingMovementMethod.getInstance()
+        binding.markdownRenderingResultTextView.scrollTo(0, 0)
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                renderMarkdown(s.toString())
-                textEditedByUser = true
-            }
+        binding.markdownEditorEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
                 renderMarkdown(s.toString())
                 textEditedByUser = true
+                binding.markdownRenderingResultTextView.gravity = Gravity.BOTTOM
             }
         })
 
@@ -71,6 +72,8 @@ class EditorActivity : AppCompatActivity() {
         binding.markdownEditorEditText.setText(targetMemo?.text ?: "")
         // ユーザーによる入力ではないのでfalseに
         textEditedByUser = false
+        // スクロール位置を最上部にセット
+        binding.markdownRenderingResultTextView.gravity = Gravity.NO_GRAVITY
 
         logDebug("target memo is $targetMemo")
     }
