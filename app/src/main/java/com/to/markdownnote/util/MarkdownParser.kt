@@ -19,8 +19,44 @@ import com.vladsch.flexmark.util.data.MutableDataSet
  * @return パース結果のHTML
  */
 fun parseMarkdownToHTML(markdown: String): String {
-    val document = parser.parse(markdown)
+    val document = parser.parse(beforeParse(markdown))
     return renderer.render(document)
+}
+
+/**
+ * パース前処理を行う。
+ *
+ * @param markdown Markdownのテキスト
+ * @return 前処理結果のテキスト
+ */
+private fun beforeParse(markdown: String): String {
+    val lines = markdown.split(System.lineSeparator())
+    var result = mutableListOf<String>()
+    // 空行が連続した回数
+    var consBlankLineCnt = 0
+
+    for (line in lines) {
+        if (line.isEmpty()) {
+            consBlankLineCnt++
+
+            if (consBlankLineCnt >= 2) {
+                // 空行が2個以上連続している場合はbrタグ
+                result.add("<br />")
+            } else {
+                // 2個以上連続していない場合はそのまま
+                result.add("")
+            }
+        } else {
+            if (consBlankLineCnt >= 2) {
+                // 空行が2個以上連続していた場合は最後にbrタグなしの空行を挟むため空文字
+                result.add("")
+            }
+            consBlankLineCnt = 0
+            result.add(line)
+        }
+    }
+
+    return result.joinToString(System.lineSeparator())
 }
 
 // TODO 最終的な形はまたあとで確定する
