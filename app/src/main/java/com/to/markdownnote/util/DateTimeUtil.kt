@@ -18,6 +18,7 @@ val dateFormatExcludeYear = SimpleDateFormat("MM/dd")
 /** 時刻フォーマット: HH:mm */
 val timeFormat = SimpleDateFormat("HH:mm")
 
+/** 日時フォーマット: yyyyMMdd_HHmmss */
 val dateTimeFormatForFileName = SimpleDateFormat("yyyyMMdd_HHmmss")
 
 /** 曜日のR値リスト */
@@ -41,9 +42,9 @@ fun nowTimestampMillis(): Long = System.currentTimeMillis()
 fun nowTimestampSec(): Long = millisToSec(nowTimestampMillis())
 
 /**
- * 現在時刻をUNIX時間(秒)で取得する。
+ * 現在時刻をファイル名用の書式で取得する。
  *
- * @return 現在時刻のUNIX時間(秒)
+ * @return 現在時刻のファイル名用文字列
  */
 fun nowTimestampForFileName(): String {
     val date = Date(nowTimestampMillis())

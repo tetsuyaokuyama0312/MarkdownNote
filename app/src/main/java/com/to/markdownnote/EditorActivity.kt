@@ -13,8 +13,8 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
 import com.to.markdownnote.databinding.ActivityEditorBinding
 import com.to.markdownnote.model.Memo
 import com.to.markdownnote.repository.deleteMemo
@@ -156,27 +156,24 @@ class EditorActivity : AppCompatActivity() {
         }
     }
 
-    private fun showFileOutputConfirmDialog(outputFileType: OutputFileType) {
-        newFileOutputConfirmDialog(this, getOutputFileName(outputFileType),
-            {
-                val outText = outputFileType.convert(binding.markdownEditorEditText.text.toString())
-                runAsync(
-                    {
-                        writeTextFile(this, it, outText)
-                    },
-                    {
-                        logDebug("Saved file, location=$it, text=$outText")
-                        val msg =
-                            "${getString(R.string.saved_file_message)}\n$it"
-                        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
-                    }
-                )
+    private fun showFileOutputConfirmDialog(type: OutputFileType) {
+        val dialog = newFileOutputDialogFragment(getDefaultOutputFileName(type)) { outputFileName ->
+            // 出力形式のテキストに変換
+            val outText = type.convert(binding.markdownEditorEditText.text.toString())
+            runAsync({
+                // ファイル出力
+                writeTextFile(this@EditorActivity, outputFileName, outText)
+            }) {
+                // 出力完了メッセージ表示
+                logDebug("Saved file, location=$it, text=$outText")
+                val msg = "${getString(R.string.saved_file_message)}${System.lineSeparator()}$it"
+                Snackbar.make(binding.root, msg, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.close) {}
+                    .apply { view.findViewById<TextView>(R.id.snackbar_text).maxLines = 5 }
+                    .show()
             }
-        ).show()
-    }
-
-    private fun getOutputFileName(outputFileType: OutputFileType): String {
-        return "memo_${nowTimestampForFileName()}.${outputFileType.getExtension()}"
+        }
+        dialog.show(supportFragmentManager, dialog::class.simpleName)
     }
 
     private fun showSaveConfirmDialog() {
