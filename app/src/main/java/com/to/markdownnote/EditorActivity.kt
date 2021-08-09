@@ -18,6 +18,7 @@ import com.to.markdownnote.repository.deleteMemo
 import com.to.markdownnote.repository.insertMemo
 import com.to.markdownnote.repository.updateMemo
 import com.to.markdownnote.util.*
+import kotlin.math.max
 
 class EditorActivity : AppCompatActivity() {
     companion object {
@@ -143,9 +144,13 @@ class EditorActivity : AppCompatActivity() {
             // 編集した行番号を取得
             val lineNr = text.substring(0, cursorPos).split(System.lineSeparator()).size
             binding.markdownRenderingResultTextView.post {
-                // 行番号からスクロール位置を求めてスクロール
-                val scrollY =
+                // 行番号からスクロール位置を求める
+                val lineTop =
                     binding.markdownRenderingResultTextView.layout.getLineTop(lineNr - 1)
+                // 対象行が表示領域の中心に来るよう調整
+                val viewHeightHalf = binding.markdownRenderingResultTextView.height / 2
+                val scrollY = max(lineTop - viewHeightHalf, 0) // 最上部より上にスクロールしないようにmax
+                // スクロール
                 binding.markdownRenderingResultTextView.scrollTo(0, scrollY)
             }
         }
