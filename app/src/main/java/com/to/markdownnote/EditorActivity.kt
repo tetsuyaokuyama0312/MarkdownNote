@@ -10,7 +10,10 @@ import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.EditText
+import android.widget.RelativeLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.to.markdownnote.databinding.ActivityEditorBinding
 import com.to.markdownnote.model.Memo
@@ -89,23 +92,11 @@ class EditorActivity : AppCompatActivity() {
             android.R.id.home ->
                 performToHome()
             R.id.menu_edit ->
-                ScreenMode.EDIT.apply(
-                    binding.editorVerticalSeparator,
-                    binding.markdownEditorEditText,
-                    binding.markdownRenderingResultTextView
-                )
+                ScreenMode.EDIT.apply(binding)
             R.id.menu_separate ->
-                ScreenMode.SEPARATE.apply(
-                    binding.editorVerticalSeparator,
-                    binding.markdownEditorEditText,
-                    binding.markdownRenderingResultTextView
-                )
+                ScreenMode.SEPARATE.apply(binding)
             R.id.menu_view ->
-                ScreenMode.VIEW.apply(
-                    binding.editorVerticalSeparator,
-                    binding.markdownEditorEditText,
-                    binding.markdownRenderingResultTextView
-                )
+                ScreenMode.VIEW.apply(binding)
             R.id.menu_file_output_plain_text ->
                 showFileOutputConfirmDialog(OutputFileType.PLAIN_TEXT)
             R.id.menu_file_output_markdown ->
@@ -316,15 +307,14 @@ class EditorActivity : AppCompatActivity() {
         /**
          * このモードを適用する。
          *
-         * @param separator 画面を分割するセパレータ
-         * @param editorText テキスト編集部のEditText
-         * @param resultView テキストレンダリング結果のTextView
+         * @param binding EditorActivityのViewBinding
          */
-        fun apply(separator: Space, editorText: EditText, resultView: TextView) {
+        fun apply(binding: ActivityEditorBinding) {
+            val separator = binding.editorVerticalSeparator
             val layoutParams = separator.layoutParams as? RelativeLayout.LayoutParams ?: return
             changeSeparatorLayout(layoutParams)
-            changeEditorTextLayout(editorText)
-            changeResultViewLayout(resultView)
+            changeEditorTextLayout(binding.markdownEditorEditText)
+            changeResultViewLayout(binding.markdownRenderingResultTextView)
         }
 
         abstract fun changeSeparatorLayout(layoutParams: RelativeLayout.LayoutParams)
