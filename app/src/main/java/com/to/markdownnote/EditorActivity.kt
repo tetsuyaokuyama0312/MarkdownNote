@@ -39,6 +39,16 @@ class EditorActivity : AppCompatActivity() {
             intent.putExtra(MEMO_KEY, memo)
             return intent
         }
+
+        /**
+         * Viewのスクロール位置を調整する割合を示す値。
+         *
+         * テキストの変更に応じてViewをスクロールする際、変更された行が画面表示領域のどの位置に来るようにスクロールするかを示す値。
+         *
+         * この値は0～1の範囲内の小数値を取り、0であれば画面表示領域の最上部、0.5であれば画面表示領域の中心部、1であれば画面表示領域の最下部に
+         * 変更行が来るようにスクロールする。
+         */
+        private const val VIEW_SCROLL_RATIO = 0.2
     }
 
     private lateinit var binding: ActivityEditorBinding
@@ -68,8 +78,8 @@ class EditorActivity : AppCompatActivity() {
                 val text = s.toString()
                 // Markdownレンダリング
                 renderMarkdown(text)
-                // ResultViewをスクロール
-                scrollResultTextView(text)
+                // Viewをスクロール
+                scrollViewOnTextChanged(text)
                 textEditedByUser = true
             }
         })
@@ -122,27 +132,39 @@ class EditorActivity : AppCompatActivity() {
         renderHTML(binding.markdownRenderingResultTextView, html)
     }
 
-    private fun scrollResultTextView(text: String) {
+    private fun scrollViewOnTextChanged(text: String) {
         // EditTextのカーソル位置を取得
         val cursorPos = binding.markdownEditorEditText.selectionEnd
 
         if (cursorPos == text.length) {
             // 末尾への追記の場合は最下部へスクロール
+            binding.markdownEditorEditText.gravity = Gravity.BOTTOM
             binding.markdownRenderingResultTextView.gravity = Gravity.BOTTOM
         } else {
             // それ以外の場合は編集した行番号に応じてスクロール
+            binding.markdownEditorEditText.gravity = Gravity.NO_GRAVITY
+            binding.markdownRenderingResultTextView.gravity = Gravity.NO_GRAVITY
 
             // 編集した行番号を取得
             val lineNr = text.substring(0, cursorPos).split(System.lineSeparator()).size
-            binding.markdownRenderingResultTextView.post {
-                // 行番号からスクロール位置を求める
-                val lineTop =
-                    binding.markdownRenderingResultTextView.layout.getLineTop(lineNr - 1)
-                // 対象行が表示領域の中心に来るよう調整
-                val viewHeightHalf = binding.markdownRenderingResultTextView.height / 2
-                val scrollY = max(lineTop - viewHeightHalf, 0) // 最上部より上にスクロールしないようにmax
-                // スクロール
-                binding.markdownRenderingResultTextView.scrollTo(0, scrollY)
+            // EditTextをスクロール
+            scrollViewByLineNr(binding.markdownEditorEditText, lineNr)
+            // ResultTextViewをスクロール
+            scrollViewByLineNr(binding.markdownRenderingResultTextView, lineNr)
+        }
+    }
+
+    private fun scrollViewByLineNr(textView: TextView, lineNr: Int) {
+        textView.post {
+            // 行番号からスクロール位置を求める
+            val lineTop = textView.layout?.getLineTop(lineNr - 1) ?: return@post
+            // 対象行の表示位置を調整
+            val scrollY = lineTop - (textView.height * VIEW_SCROLL_RATIO).toInt()
+
+            // 算出した方向にスクロール可能であればスクロール
+            if (textView.canScrollVertically(scrollY)) {
+                // 最上部より上にスクロールしないよう、マイナスは0に補正
+                textView.scrollTo(0, max(scrollY, 0))
             }
         }
     }
