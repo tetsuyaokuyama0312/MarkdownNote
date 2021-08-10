@@ -1,4 +1,4 @@
-package com.to.markdownnote
+package com.to.markdownnote.activity
 
 import android.content.Context
 import android.content.Intent
@@ -15,6 +15,10 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+import com.to.markdownnote.R
+import com.to.markdownnote.activity.dialog.newDeleteConfirmDialogFragment
+import com.to.markdownnote.activity.dialog.newFileOutputDialogFragment
+import com.to.markdownnote.activity.dialog.newSaveConfirmDialogFragment
 import com.to.markdownnote.databinding.ActivityEditorBinding
 import com.to.markdownnote.model.Memo
 import com.to.markdownnote.repository.deleteMemo
@@ -211,22 +215,24 @@ class EditorActivity : AppCompatActivity() {
      * @param type 出力ファイルタイプ
      */
     private fun showFileOutputDialog(type: OutputFileType) {
-        val dialog = newFileOutputDialogFragment(getDefaultOutputFileName(type)) { outputFileName ->
-            // 出力形式のテキストに変換
-            val outText = type.convert(binding.markdownEditorEditText.text.toString())
-            runAsync({
-                // ファイル出力
-                writeTextFile(this@EditorActivity, outputFileName, outText)
-            }) {
-                // 出力完了メッセージ表示
-                logDebug("Saved file, location=$it, text=$outText")
-                val msg = "${getString(R.string.saved_file_message)}${System.lineSeparator()}$it"
-                Snackbar.make(binding.root, msg, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.close) {}
-                    .apply { view.findViewById<TextView>(R.id.snackbar_text).maxLines = 5 }
-                    .show()
+        val dialog =
+            newFileOutputDialogFragment(getDefaultOutputFileName(type.getExtension())) { outputFileName ->
+                // 出力形式のテキストに変換
+                val outText = type.convert(binding.markdownEditorEditText.text.toString())
+                runAsync({
+                    // ファイル出力
+                    writeTextFile(this@EditorActivity, outputFileName, outText)
+                }) {
+                    // 出力完了メッセージ表示
+                    logDebug("Saved file, location=$it, text=$outText")
+                    val msg =
+                        "${getString(R.string.saved_file_message)}${System.lineSeparator()}$it"
+                    Snackbar.make(binding.root, msg, Snackbar.LENGTH_INDEFINITE)
+                        .setAction(R.string.close) {}
+                        .apply { view.findViewById<TextView>(R.id.snackbar_text).maxLines = 5 }
+                        .show()
+                }
             }
-        }
         dialog.show(supportFragmentManager, dialog::class.simpleName)
     }
 

@@ -1,4 +1,4 @@
-package com.to.markdownnote
+package com.to.markdownnote.activity
 
 import com.to.markdownnote.util.parseMarkdownToHTML
 

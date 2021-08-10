@@ -1,4 +1,4 @@
-package com.to.markdownnote
+package com.to.markdownnote.activity.dialog
 
 import android.app.AlertDialog
 import android.app.Dialog

@@ -1,4 +1,4 @@
-package com.to.markdownnote
+package com.to.markdownnote.activity
 
 import android.content.Context
 import android.content.Intent
@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.to.markdownnote.activity.dialog.newDeleteConfirmDialogFragment
 import com.to.markdownnote.databinding.ActivityTopBinding
 import com.to.markdownnote.repository.deleteMemo
 import com.to.markdownnote.repository.selectAllMemo
