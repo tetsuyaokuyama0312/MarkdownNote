@@ -2,10 +2,7 @@ package com.to.markdownnote.util
 
 import com.to.markdownnote.util.Processors.parser
 import com.to.markdownnote.util.Processors.renderer
-import com.vladsch.flexmark.ext.anchorlink.AnchorLinkExtension
-import com.vladsch.flexmark.ext.gfm.issues.GfmIssuesExtension
 import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension
-import com.vladsch.flexmark.ext.gfm.users.GfmUsersExtension
 import com.vladsch.flexmark.ext.tables.TablesExtension
 import com.vladsch.flexmark.ext.toc.TocExtension
 import com.vladsch.flexmark.html.HtmlRenderer
@@ -59,8 +56,6 @@ private fun beforeParse(markdown: String): String {
     return result.joinToString(System.lineSeparator())
 }
 
-// TODO 最終的な形はまたあとで確定する
-
 private object Processors {
     private val options = MutableDataSet()
 
@@ -68,12 +63,9 @@ private object Processors {
         options.set(
             Parser.EXTENSIONS,
             listOf(
-                AnchorLinkExtension.create(), // 見出しにアンカーを付ける
                 StrikethroughExtension.create(), // 打ち消し線に対応
                 TablesExtension.create(), // テーブルに対応
                 TocExtension.create(), // [TOC] の部分に目次を生成する
-                GfmIssuesExtension.create(),
-                GfmUsersExtension.create(),
             )
         )
         options.set(HtmlRenderer.SOFT_BREAK, "<br />\n");
