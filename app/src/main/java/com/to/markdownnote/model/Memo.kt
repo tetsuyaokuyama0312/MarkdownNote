@@ -6,6 +6,14 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
+/**
+ * メモを表すデータクラス
+ *
+ * @property id ID(自動採番)
+ * @property text テキスト
+ * @property createdDate 作成日時
+ * @property lastUpdatedDate 最終更新日時
+ */
 @Parcelize
 @Entity
 data class Memo(

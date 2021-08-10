@@ -23,8 +23,12 @@ import com.to.markdownnote.repository.updateMemo
 import com.to.markdownnote.util.*
 import kotlin.math.max
 
+/**
+ * エディタ画面のアクティビティ
+ */
 class EditorActivity : AppCompatActivity() {
     companion object {
+        /** IntentからMemoを取得する際のキー */
         private const val MEMO_KEY = "MEMO_KEY"
 
         /**
@@ -51,10 +55,13 @@ class EditorActivity : AppCompatActivity() {
         private const val VIEW_SCROLL_RATIO = 0.2
     }
 
+    /** EditorActivityのViewBinding */
     private lateinit var binding: ActivityEditorBinding
 
+    /** 編集対象のメモ(新規作成の場合はnull) */
     private var targetMemo: Memo? = null
 
+    /** ユーザーによりテキストが編集されたかどうか */
     private var textEditedByUser: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +71,7 @@ class EditorActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = null
 
+        // 編集対象メモを取得
         targetMemo = intent.getParcelableExtra(MEMO_KEY)
 
         binding.markdownRenderingResultTextView.movementMethod =
@@ -77,7 +85,7 @@ class EditorActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
                 val text = s.toString()
                 // Markdownレンダリング
-                renderMarkdown(text)
+                renderAsMarkdown(text)
                 // Viewをスクロール
                 scrollViewOnTextChanged(text)
                 textEditedByUser = true
@@ -86,7 +94,7 @@ class EditorActivity : AppCompatActivity() {
 
         // 保存済みのテキストをセット
         binding.markdownEditorEditText.setText(targetMemo?.text ?: "")
-        // ユーザーによる入力ではないのでfalseに
+        // ユーザーによる入力ではないためfalseに
         textEditedByUser = false
 
         logDebug("target memo is $targetMemo")
@@ -100,7 +108,7 @@ class EditorActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home ->
-                performToHome()
+                performToTop()
             R.id.menu_edit ->
                 ScreenMode.EDIT.apply(binding)
             R.id.menu_separate ->
@@ -108,11 +116,11 @@ class EditorActivity : AppCompatActivity() {
             R.id.menu_view ->
                 ScreenMode.VIEW.apply(binding)
             R.id.menu_file_output_plain_text ->
-                showFileOutputConfirmDialog(OutputFileType.PLAIN_TEXT)
+                showFileOutputDialog(OutputFileType.PLAIN_TEXT)
             R.id.menu_file_output_markdown ->
-                showFileOutputConfirmDialog(OutputFileType.MARKDOWN)
+                showFileOutputDialog(OutputFileType.MARKDOWN)
             R.id.menu_file_output_html ->
-                showFileOutputConfirmDialog(OutputFileType.HTML)
+                showFileOutputDialog(OutputFileType.HTML)
             R.id.menu_delete ->
                 showDeleteConfirmDialog()
             R.id.menu_complete,
@@ -127,11 +135,21 @@ class EditorActivity : AppCompatActivity() {
         return true
     }
 
-    private fun renderMarkdown(text: String) {
+    /**
+     * 入力テキストをMarkdownとしてレンダリング結果表示部にレンダリングする。
+     *
+     * @param text 入力テキスト
+     */
+    private fun renderAsMarkdown(text: String) {
         val html = parseMarkdownToHTML(text)
         renderHTML(binding.markdownRenderingResultTextView, html)
     }
 
+    /**
+     * テキストの変更に応じてViewをスクロールする。
+     *
+     * @param text 入力テキスト
+     */
     private fun scrollViewOnTextChanged(text: String) {
         // EditTextのカーソル位置を取得
         val cursorPos = binding.markdownEditorEditText.selectionEnd
@@ -147,13 +165,19 @@ class EditorActivity : AppCompatActivity() {
 
             // 編集した行番号を取得
             val lineNr = text.substring(0, cursorPos).split(System.lineSeparator()).size
-            // EditTextをスクロール
+            // テキスト入力部をスクロール
             scrollViewByLineNr(binding.markdownEditorEditText, lineNr)
-            // ResultTextViewをスクロール
+            // レンダリング結果表示部をスクロール
             scrollViewByLineNr(binding.markdownRenderingResultTextView, lineNr)
         }
     }
 
+    /**
+     * 変更されたテキストの行数に応じてViewをスクロールする。
+     *
+     * @param textView スクロール対象のView
+     * @param lineNr 変更されたテキストの行数
+     */
     private fun scrollViewByLineNr(textView: TextView, lineNr: Int) {
         textView.post {
             // 行番号からスクロール位置を求める
@@ -169,7 +193,10 @@ class EditorActivity : AppCompatActivity() {
         }
     }
 
-    private fun performToHome() {
+    /**
+     * Top画面へ戻る操作を行う。
+     */
+    private fun performToTop() {
         if (textEditedByUser) {
             // ユーザーによって編集されていればダイアログ表示
             showSaveConfirmDialog()
@@ -178,7 +205,12 @@ class EditorActivity : AppCompatActivity() {
         }
     }
 
-    private fun showFileOutputConfirmDialog(type: OutputFileType) {
+    /**
+     * ファイル出力ダイアログを表示する。
+     *
+     * @param type 出力ファイルタイプ
+     */
+    private fun showFileOutputDialog(type: OutputFileType) {
         val dialog = newFileOutputDialogFragment(getDefaultOutputFileName(type)) { outputFileName ->
             // 出力形式のテキストに変換
             val outText = type.convert(binding.markdownEditorEditText.text.toString())
@@ -198,16 +230,20 @@ class EditorActivity : AppCompatActivity() {
         dialog.show(supportFragmentManager, dialog::class.simpleName)
     }
 
+    /**
+     * 保存確認ダイアログを表示する。
+     */
     private fun showSaveConfirmDialog() {
-        // 保存確認ダイアログを起動
         val dialog = newSaveConfirmDialogFragment(this,
             { performComplete() },
             { startActivity(TopActivity.createIntent(this)) })
         dialog.show(supportFragmentManager, dialog::class.simpleName)
     }
 
+    /**
+     * 削除確認ダイアログを表示する。
+     */
     private fun showDeleteConfirmDialog() {
-        // 削除確認ダイアログを起動
         val dialog = newDeleteConfirmDialogFragment(this, {
             deleteMemo(this, targetMemo!!) {
                 logDebug("Deleted memo=[$targetMemo!!]")
@@ -217,6 +253,9 @@ class EditorActivity : AppCompatActivity() {
         dialog.show(supportFragmentManager, dialog::class.simpleName)
     }
 
+    /**
+     * エディタ画面の完了操作を行う。
+     */
     private fun performComplete() {
         if (!textEditedByUser) {
             // ユーザーにより編集されていない場合は何もせずエディタ画面終了
@@ -234,6 +273,11 @@ class EditorActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * メモ新規作成時のエディタ画面の完了操作を行う。
+     *
+     * @param text 入力テキスト
+     */
     private fun performCompleteWhenNew(text: String) {
         // 新規作成の場合は、入力済みの場合のみ保存
 
@@ -249,6 +293,12 @@ class EditorActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * メモ編集時のエディタ画面の完了操作を行う。
+     *
+     * @param text 入力テキスト
+     * @param oldMemo 更新対象のメモ
+     */
     private fun performCompleteWhenEdit(text: String, oldMemo: Memo) {
         // 編集の場合は、更新 or 削除
 
@@ -336,8 +386,25 @@ class EditorActivity : AppCompatActivity() {
             changeResultViewLayout(binding.markdownRenderingResultTextView)
         }
 
+        /**
+         * セパレータのレイアウト変更を行う。
+         *
+         * @param layoutParams セパレータのLayoutParams
+         */
         abstract fun changeSeparatorLayout(layoutParams: RelativeLayout.LayoutParams)
+
+        /**
+         * テキスト入力部のレイアウト変更を行う。
+         *
+         * @param editorText テキスト入力部のEditText
+         */
         abstract fun changeEditorTextLayout(editorText: EditText)
+
+        /**
+         * レンダリング結果表示部のレイアウト変更を行う。
+         *
+         * @param resultView レンダリング結果表示部のTextView
+         */
         abstract fun changeResultViewLayout(resultView: TextView)
     }
 }

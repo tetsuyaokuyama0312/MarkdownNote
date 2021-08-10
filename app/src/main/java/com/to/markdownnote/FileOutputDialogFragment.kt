@@ -74,6 +74,13 @@ class FileOutputDialogFragment : DialogFragment() {
         }
     }
 
+    /**
+     * このクラスの引数を設定する。
+     *
+     * @param initialFileName 出力ファイル名のEditTextに初期表示するファイル名
+     * @param canceledOnTouchOutside ダイアログ外の領域をタッチした際にキャンセル扱いにするかどうか
+     * @param listener 出力ボタンのコールバックリスナ
+     */
     fun setArguments(
         initialFileName: String? = null,
         canceledOnTouchOutside: Boolean = false,
@@ -86,6 +93,9 @@ class FileOutputDialogFragment : DialogFragment() {
         }
     }
 
+    /**
+     * 出力ボタンのコールバックリスナ
+     */
     @Parcelize
     open class OnOutputButtonClickListener : EventListener, Parcelable {
         open fun onOutputButtonClick(outputFileName: String) {}

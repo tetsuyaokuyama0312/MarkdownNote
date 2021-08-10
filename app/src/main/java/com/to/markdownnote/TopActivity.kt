@@ -15,6 +15,9 @@ import com.to.markdownnote.view.MemoRow
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 
+/**
+ * Top画面のアクティビティ
+ */
 class TopActivity : AppCompatActivity() {
     companion object {
         /**
@@ -28,9 +31,10 @@ class TopActivity : AppCompatActivity() {
         }
     }
 
+    /** TopActivityのViewBinding */
     private lateinit var binding: ActivityTopBinding
 
-    /** メモリストのAdapter */
+    /** 保存済みメモのAdapter */
     private val memoRowAdapter = GroupAdapter<GroupieViewHolder>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,6 +74,9 @@ class TopActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * 保存済みの全メモをロードする。
+     */
     private fun loadAllMemo() {
         memoRowAdapter.clear()
 
@@ -82,6 +89,12 @@ class TopActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * 削除確認ダイアログを表示する。
+     *
+     * @param memoRow 削除対象メモのMemoRow
+     * @param memoRowPos memoRowのAdapter内での位置
+     */
     private fun showDeleteConfirmDialog(memoRow: MemoRow, memoRowPos: Int) {
         val memo = memoRow.memo
         // 削除確認ダイアログを起動

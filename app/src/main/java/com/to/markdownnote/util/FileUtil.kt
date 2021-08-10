@@ -7,7 +7,7 @@ import java.io.File
 import java.io.FileWriter
 
 /** デフォルトの出力ファイル名パターン: memo_${currentTime}.${fileExtension} */
-private const val DEFAULT_OUTPUT_FILE_PATTERN = "memo_%s.%s"
+private const val DEFAULT_OUTPUT_FILE_NAME_PATTERN = "memo_%s.%s"
 
 /**
  * テキストファイルを出力する。
@@ -34,7 +34,7 @@ fun writeTextFile(context: Context, outputFileName: String, text: String): Strin
  * @return デフォルトの出力ファイル名
  */
 fun getDefaultOutputFileName(outputFileType: OutputFileType): String {
-    return DEFAULT_OUTPUT_FILE_PATTERN.format(
+    return DEFAULT_OUTPUT_FILE_NAME_PATTERN.format(
         nowTimestampForFileName(),
         outputFileType.getExtension()
     )

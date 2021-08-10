@@ -8,6 +8,12 @@ import com.to.markdownnote.util.getFormattedDateTime
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 
+/**
+ * MemoのItem
+ *
+ * @property context コンテキスト
+ * @property memo メモ
+ */
 class MemoRow(
     private val context: Context,
     val memo: Memo

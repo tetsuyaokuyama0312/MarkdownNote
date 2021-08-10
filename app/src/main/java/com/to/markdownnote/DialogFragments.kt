@@ -3,6 +3,20 @@ package com.to.markdownnote
 import android.content.Context
 import android.content.DialogInterface
 
+/**
+ * 指定されたパラメータを使用して、共通確認ダイアログを新規作成する。
+ *
+ * @param title タイトル
+ * @param message メッセージ
+ * @param positiveText ポジティブボタンのテキスト
+ * @param negativeText ネガティブボタンのテキスト
+ * @param neutralText ニュートラルボタンのテキスト
+ * @param onPositiveClick ポジティブボタンクリックのハンドラ
+ * @param onNegativeClick ネガティブボタンクリックのハンドラ
+ * @param onNeutralClick ニュートラルボタンクリックのハンドラ
+ * @param canceledOnTouchOutside ダイアログ外の領域をタッチした際にキャンセル扱いにするかどうか
+ * @return 共通確認ダイアログ
+ */
 fun newCommonConfirmDialogFragment(
     title: String? = null,
     message: String,
@@ -31,6 +45,16 @@ fun newCommonConfirmDialogFragment(
     }
 }
 
+/**
+ * 指定されたパラメータを使用して、保存確認ダイアログを新規作成する。
+ *
+ * @param context コンテキスト
+ * @param onPositiveClick ポジティブボタンクリックのハンドラ
+ * @param onNegativeClick ネガティブボタンクリックのハンドラ
+ * @param onNeutralClick ニュートラルボタンクリックのハンドラ
+ * @param canceledOnTouchOutside ダイアログ外の領域をタッチした際にキャンセル扱いにするかどうか
+ * @return 保存確認ダイアログ
+ */
 fun newSaveConfirmDialogFragment(
     context: Context,
     onPositiveClick: () -> Unit = {},
@@ -50,6 +74,15 @@ fun newSaveConfirmDialogFragment(
     )
 }
 
+/**
+ * 指定されたパラメータを使用して、削除確認ダイアログを新規作成する。
+ *
+ * @param context コンテキスト
+ * @param onPositiveClick ポジティブボタンクリックのハンドラ
+ * @param onNegativeClick ネガティブボタンクリックのハンドラ
+ * @param canceledOnTouchOutside ダイアログ外の領域をタッチした際にキャンセル扱いにするかどうか
+ * @return 削除確認ダイアログ
+ */
 fun newDeleteConfirmDialogFragment(
     context: Context,
     onPositiveClick: () -> Unit = {},
@@ -66,6 +99,14 @@ fun newDeleteConfirmDialogFragment(
     )
 }
 
+/**
+ * 指定されたパラメータを使用して、ファイル出力ダイアログを新規作成する。
+ *
+ * @param initialFileName 初期表示ファイル名
+ * @param canceledOnTouchOutside ダイアログ外の領域をタッチした際にキャンセル扱いにするかどうか
+ * @param onOutputButtonClickListener 出力ボタンクリックのコールバックリスナ
+ * @return ファイル出力ダイアログ
+ */
 fun newFileOutputDialogFragment(
     initialFileName: String? = null,
     canceledOnTouchOutside: Boolean = false,
@@ -80,6 +121,14 @@ fun newFileOutputDialogFragment(
     }
 }
 
+/**
+ * 指定されたパラメータを使用して、ファイル出力ダイアログを新規作成する。
+ *
+ * @param initialFileName 初期表示ファイル名
+ * @param canceledOnTouchOutside ダイアログ外の領域をタッチした際にキャンセル扱いにするかどうか
+ * @param onOutputButtonClick 出力ボタンクリックのハンドラ
+ * @return ファイル出力ダイアログ
+ */
 fun newFileOutputDialogFragment(
     initialFileName: String? = null,
     canceledOnTouchOutside: Boolean = false,
