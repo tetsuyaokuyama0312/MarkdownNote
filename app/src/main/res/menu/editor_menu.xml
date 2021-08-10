@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_edit"
+        android:icon="@drawable/ic_edit"
+        android:title="@string/complete"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_separate"
+        android:icon="@drawable/ic_separate"
+        android:title="@string/complete"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_view"
+        android:icon="@drawable/ic_view"
+        android:title="@string/complete"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_complete"
+        android:icon="@drawable/ic_complete"
+        android:title="@string/complete"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_delete"
+        android:title="@string/delete"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_file_output"
+        android:title="@string/file_output"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/menu_file_output_plain_text"
+                android:title="@string/plain_text" />
+            <item
+                android:id="@+id/menu_file_output_markdown"
+                android:title="@string/markdown" />
+            <item
+                android:id="@+id/menu_file_output_html"
+                android:title="@string/html" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/menu_complete_text"
+        android:title="@string/complete"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_cancel"
+        android:title="@string/cancel"
+        app:showAsAction="never" />
+</menu>

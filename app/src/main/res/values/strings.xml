@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">MarkdownNote</string>
+    <string name="new_memo">New memo</string>
+    <string name="no_additional_text">No additional text</string>
+    <string name="editor">Editor</string>
+    <string name="complete">Complete</string>
+    <string name="edit">Edit</string>
+    <string name="view">View</string>
+    <string name="separate">Separate</string>
+    <string name="delete">Delete</string>
+    <string name="file_output">File output</string>
+    <string name="save_confirm_message">Save your changes?</string>
+    <string name="delete_confirm_message">Delete this memo?</string>
+    <string name="output_file_name">Output file name</string>
+    <string name="plain_text">Plain text</string>
+    <string name="markdown">Markdown</string>
+    <string name="html">HTML</string>
+    <string name="saved_file_message">Saved file in following path</string>
+    <string name="output">Output</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="sunday">Sun</string>
+    <string name="monday">Mon</string>
+    <string name="tuesday">Tue</string>
+    <string name="wednesday">Wed</string>
+    <string name="thursday">Thu</string>
+    <string name="friday">Fri</string>
+    <string name="saturday">Sat</string>
+</resources>

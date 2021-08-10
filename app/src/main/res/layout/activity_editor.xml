@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.to.markdownnote.EditorActivity">
+
+    <Space
+        android:id="@+id/editor_vertical_separator"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true" />
+
+    <View
+        android:id="@+id/editor_vertical_divider"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_alignStart="@+id/editor_vertical_separator"
+        android:background="@android:color/darker_gray" />
+
+    <EditText
+        android:id="@+id/markdown_editor_edit_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/editor_vertical_separator"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@android:color/transparent"
+        android:inputType="textMultiLine"
+        android:scrollbars="vertical"
+        android:textSize="18sp"
+        tools:text="# Title" />
+
+    <TextView
+        android:id="@+id/markdown_rendering_result_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/editor_vertical_separator"
+        android:layout_alignTop="@+id/markdown_editor_edit_text"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:scrollbars="vertical"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        tools:text="Title" />
+
+</RelativeLayout>
