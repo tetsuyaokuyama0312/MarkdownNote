@@ -1,4 +1,4 @@
-package com.to.markdownnote
+package com.to.markdownnote.activity
 
 import android.content.Context
 import android.graphics.*
@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable
 import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.to.markdownnote.R
 
 /**
  * スワイプされた際に削除処理を実行する [ItemTouchHelper.SimpleCallback] の抽象実装。

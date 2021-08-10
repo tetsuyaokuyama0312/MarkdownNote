@@ -1,7 +1,8 @@
-package com.to.markdownnote
+package com.to.markdownnote.activity.dialog
 
 import android.content.Context
 import android.content.DialogInterface
+import com.to.markdownnote.R
 
 /**
  * 指定されたパラメータを使用して、共通確認ダイアログを新規作成する。
