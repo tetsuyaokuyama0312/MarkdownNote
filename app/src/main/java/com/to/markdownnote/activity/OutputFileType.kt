@@ -37,7 +37,7 @@ enum class OutputFileType {
      * デフォルトでは入力テキストをそのまま返却する。
      *
      * @param markdown Markdownテキスト
-     * @return 返還後のテキスト
+     * @return 変換後のテキスト
      */
     open fun convert(markdown: String): String {
         return markdown
