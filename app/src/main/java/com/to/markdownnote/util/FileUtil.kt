@@ -21,12 +21,12 @@ private const val DEFAULT_OUTPUT_FILE_EXTENSION = "txt"
  */
 fun writeTextFile(context: Context, outputFileName: String, text: String): String {
     val outDir = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
-    val out = File(outDir, outputFileName)
-    val writer = FileWriter(out)
+    val outFile = File(outDir, outputFileName)
+    val writer = FileWriter(outFile)
     writer.append(text)
     writer.flush()
     writer.close()
-    return out.absolutePath
+    return outFile.absolutePath
 }
 
 /**
