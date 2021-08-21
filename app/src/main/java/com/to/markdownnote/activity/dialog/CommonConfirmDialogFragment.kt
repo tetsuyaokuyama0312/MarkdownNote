@@ -11,19 +11,9 @@ import androidx.fragment.app.DialogFragment
 /**
  * 共通確認ダイアログクラス
  *
- * このクラスを利用する場合、[show] を呼び出す前に、初期処理として [setArguments]を呼び出す必要がある。
- * [setArguments]を呼び出すことで、ダイアログの作成時に使用される以下の引数を設定することができる。
- *
- * - ダイアログのタイトル(省略可)
- * - ダイアログのメッセージ(必須)
- * - ポジティブボタンのテキスト(省略可※1)
- * - ネガティブボタンのテキスト(省略可※1)
- * - ニュートラルボタンのテキスト(省略可※1)
- * - ボタンクリック時に呼び出されるコールバックリスナ(省略可)
- *
- * ※1 ただしポジティブボタン、ネガティブボタン、ニュートラルボタンのいずれかは設定されている必要がある。
+ * このクラスのインスタンスは、[CommonConfirmDialogFragment.newInstance]を呼び出すことで作成できる。
  */
-class CommonConfirmDialogFragment : DialogFragment() {
+class CommonConfirmDialogFragment private constructor() : DialogFragment() {
     companion object {
         private const val TITLE_KEY = "TITLE"
         private const val MESSAGE_KEY = "MESSAGE"
@@ -32,6 +22,44 @@ class CommonConfirmDialogFragment : DialogFragment() {
         private const val NEUTRAL_TEXT_KEY = "NEUTRAL_TEXT"
         private const val LISTENER_KEY = "LISTENER"
         private const val CANCELED_ON_TOUCH_OUTSIDE_KEY = "CANCELED_ON_TOUCH_OUTSIDE"
+
+        /**
+         * 指定された引数を使用して、`CommonConfirmDialogFragment`を作成する。
+         *
+         * 引数のうち、`message`は省略不可である。
+         * また`positiveText`, `negativeText`, `neutralText`のいずれかは設定されている必要がある。
+         *
+         * @param title ダイアログのタイトル
+         * @param message ダイアログのメッセージ
+         * @param positiveText ポジティブボタンのテキスト
+         * @param negativeText ネガティブボタンのテキスト
+         * @param neutralText ニュートラルボタンのテキスト
+         * @param listener ダイアログのボタンクリック時に呼び出されるコールバックリスナ
+         * @param canceledOnTouchOutside ダイアログ外の領域をタッチした際にキャンセル扱いにするかどうか
+         * @return `CommonConfirmDialogFragment`
+         * @throws IllegalArgumentException `positiveText`, `negativeText`, `neutralText`がすべて`null`の場合
+         */
+        fun newInstance(
+            title: String? = null, message: String, positiveText: String? = null,
+            negativeText: String? = null, neutralText: String? = null,
+            listener: OnClickListener? = null, canceledOnTouchOutside: Boolean = false
+        ): CommonConfirmDialogFragment {
+            if (positiveText == null && negativeText == null && neutralText == null) {
+                throw IllegalArgumentException("Either positiveText, negativeText or neutralText must not be null")
+            }
+
+            return CommonConfirmDialogFragment().apply {
+                arguments = Bundle().apply {
+                    putString(TITLE_KEY, title)
+                    putString(MESSAGE_KEY, message)
+                    putString(POSITIVE_TEXT_KEY, positiveText)
+                    putString(NEGATIVE_TEXT_KEY, negativeText)
+                    putString(NEUTRAL_TEXT_KEY, neutralText)
+                    putParcelable(LISTENER_KEY, listener)
+                    putBoolean(CANCELED_ON_TOUCH_OUTSIDE_KEY, canceledOnTouchOutside)
+                }
+            }
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -56,37 +84,6 @@ class CommonConfirmDialogFragment : DialogFragment() {
         }?.apply {
             setCanceledOnTouchOutside(canceledOnTouchOutside)
         } ?: throw IllegalStateException("Activity must not be null")
-    }
-
-    /**
-     * このクラスの引数を設定する。
-     *
-     * @param title ダイアログのタイトル
-     * @param message ダイアログのメッセージ
-     * @param positiveText ポジティブボタンのテキスト
-     * @param negativeText ネガティブボタンのテキスト
-     * @param neutralText ニュートラルボタンのテキスト
-     * @param listener ダイアログのボタンクリック時に呼び出されるコールバックリスナ
-     * @param canceledOnTouchOutside ダイアログ外の領域をタッチした際にキャンセル扱いにするかどうか
-     */
-    fun setArguments(
-        title: String? = null, message: String, positiveText: String? = null,
-        negativeText: String? = null, neutralText: String? = null,
-        listener: OnClickListener? = null, canceledOnTouchOutside: Boolean = false
-    ) {
-        if (positiveText == null && negativeText == null && neutralText == null) {
-            throw IllegalArgumentException("Either positiveText, negativeText or neutralText must not be null")
-        }
-
-        arguments = Bundle().apply {
-            putString(TITLE_KEY, title)
-            putString(MESSAGE_KEY, message)
-            putString(POSITIVE_TEXT_KEY, positiveText)
-            putString(NEGATIVE_TEXT_KEY, negativeText)
-            putString(NEUTRAL_TEXT_KEY, neutralText)
-            putParcelable(LISTENER_KEY, listener)
-            putBoolean(CANCELED_ON_TOUCH_OUTSIDE_KEY, canceledOnTouchOutside)
-        }
     }
 
     /**

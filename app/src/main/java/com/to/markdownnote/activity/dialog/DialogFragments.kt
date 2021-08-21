@@ -5,7 +5,7 @@ import android.content.DialogInterface
 import com.to.markdownnote.R
 
 /**
- * 指定されたパラメータを使用して、共通確認ダイアログを新規作成する。
+ * 指定された引数を使用して、共通確認ダイアログを新規作成する。
  *
  * @param title タイトル
  * @param message メッセージ
@@ -29,25 +29,23 @@ fun newCommonConfirmDialogFragment(
     onNeutralClick: () -> Unit = {},
     canceledOnTouchOutside: Boolean = false
 ): CommonConfirmDialogFragment {
-    return CommonConfirmDialogFragment().apply {
-        setArguments(
-            title = title,
-            message = message,
-            positiveText = positiveText,
-            negativeText = negativeText,
-            neutralText = neutralText,
-            listener = createCommonConfirmListener(
-                onPositiveClick,
-                onNegativeClick,
-                onNeutralClick
-            ),
-            canceledOnTouchOutside = canceledOnTouchOutside
-        )
-    }
+    return CommonConfirmDialogFragment.newInstance(
+        title = title,
+        message = message,
+        positiveText = positiveText,
+        negativeText = negativeText,
+        neutralText = neutralText,
+        listener = createCommonConfirmListener(
+            onPositiveClick,
+            onNegativeClick,
+            onNeutralClick
+        ),
+        canceledOnTouchOutside = canceledOnTouchOutside
+    )
 }
 
 /**
- * 指定されたパラメータを使用して、保存確認ダイアログを新規作成する。
+ * 指定された引数を使用して、保存確認ダイアログを新規作成する。
  *
  * @param context コンテキスト
  * @param onPositiveClick ポジティブボタンクリックのハンドラ
@@ -76,7 +74,7 @@ fun newSaveConfirmDialogFragment(
 }
 
 /**
- * 指定されたパラメータを使用して、削除確認ダイアログを新規作成する。
+ * 指定された引数を使用して、削除確認ダイアログを新規作成する。
  *
  * @param context コンテキスト
  * @param onPositiveClick ポジティブボタンクリックのハンドラ
@@ -101,7 +99,7 @@ fun newDeleteConfirmDialogFragment(
 }
 
 /**
- * 指定されたパラメータを使用して、ファイル出力ダイアログを新規作成する。
+ * 指定された引数を使用して、ファイル出力ダイアログを新規作成する。
  *
  * @param initialFileName 初期表示ファイル名
  * @param canceledOnTouchOutside ダイアログ外の領域をタッチした際にキャンセル扱いにするかどうか
@@ -113,17 +111,15 @@ fun newFileOutputDialogFragment(
     canceledOnTouchOutside: Boolean = false,
     onOutputButtonClickListener: FileOutputDialogFragment.OnOutputButtonClickListener? = null
 ): FileOutputDialogFragment {
-    return FileOutputDialogFragment().apply {
-        setArguments(
-            initialFileName,
-            canceledOnTouchOutside,
-            onOutputButtonClickListener
-        )
-    }
+    return FileOutputDialogFragment.newInstance(
+        initialFileName,
+        canceledOnTouchOutside,
+        onOutputButtonClickListener
+    )
 }
 
 /**
- * 指定されたパラメータを使用して、ファイル出力ダイアログを新規作成する。
+ * 指定された引数を使用して、ファイル出力ダイアログを新規作成する。
  *
  * @param initialFileName 初期表示ファイル名
  * @param canceledOnTouchOutside ダイアログ外の領域をタッチした際にキャンセル扱いにするかどうか
