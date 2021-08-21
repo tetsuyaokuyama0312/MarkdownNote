@@ -13,12 +13,36 @@ import java.util.*
 
 /**
  * ファイル出力ダイアログ。
+ *
+ * このクラスのインスタンスは、[FileOutputDialogFragment.newInstance]を呼び出すことで作成できる。
  */
-class FileOutputDialogFragment : DialogFragment() {
+class FileOutputDialogFragment private constructor() : DialogFragment() {
     companion object {
         private const val INITIAL_FILE_NAME_KEY = "INITIAL_FILE_NAME"
         private const val CANCELED_ON_TOUCH_OUTSIDE_KEY = "CANCELED_ON_TOUCH_OUTSIDE"
         private const val LISTENER_KEY = "LISTENER"
+
+        /**
+         * 指定された引数を使用して、`FileOutputDialogFragment`を作成する。
+         *
+         * @param initialFileName 出力ファイル名のEditTextに初期表示するファイル名
+         * @param canceledOnTouchOutside ダイアログ外の領域をタッチした際にキャンセル扱いにするかどうか
+         * @param listener 出力ボタンのコールバックリスナ
+         * @return `FileOutputDialogFragment`
+         */
+        fun newInstance(
+            initialFileName: String? = null,
+            canceledOnTouchOutside: Boolean = false,
+            listener: OnOutputButtonClickListener? = null
+        ): FileOutputDialogFragment {
+            return FileOutputDialogFragment().apply {
+                arguments = Bundle().apply {
+                    putString(INITIAL_FILE_NAME_KEY, initialFileName)
+                    putBoolean(CANCELED_ON_TOUCH_OUTSIDE_KEY, canceledOnTouchOutside)
+                    putParcelable(LISTENER_KEY, listener)
+                }
+            }
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -71,25 +95,6 @@ class FileOutputDialogFragment : DialogFragment() {
         return Dialog(activity).apply {
             setContentView(binding.root)
             setCanceledOnTouchOutside(canceledOnTouchOutside)
-        }
-    }
-
-    /**
-     * このクラスの引数を設定する。
-     *
-     * @param initialFileName 出力ファイル名のEditTextに初期表示するファイル名
-     * @param canceledOnTouchOutside ダイアログ外の領域をタッチした際にキャンセル扱いにするかどうか
-     * @param listener 出力ボタンのコールバックリスナ
-     */
-    fun setArguments(
-        initialFileName: String? = null,
-        canceledOnTouchOutside: Boolean = false,
-        listener: OnOutputButtonClickListener? = null
-    ) {
-        arguments = Bundle().apply {
-            putString(INITIAL_FILE_NAME_KEY, initialFileName)
-            putBoolean(CANCELED_ON_TOUCH_OUTSIDE_KEY, canceledOnTouchOutside)
-            putParcelable(LISTENER_KEY, listener)
         }
     }
 
