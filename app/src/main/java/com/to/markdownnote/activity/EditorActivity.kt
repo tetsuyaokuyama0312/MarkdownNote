@@ -101,6 +101,11 @@ class EditorActivity : AppCompatActivity() {
         // ユーザーによる入力ではないためfalseに
         textEditedByUser = false
 
+        if (targetMemo == null) {
+            // 新規作成の場合は自動でフォーカスON
+            binding.markdownEditorEditText.requestFocus()
+        }
+
         logDebug("target memo is $targetMemo")
     }
 
