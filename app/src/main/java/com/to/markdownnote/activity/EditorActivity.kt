@@ -241,8 +241,8 @@ class EditorActivity : AppCompatActivity() {
      */
     private fun showSaveConfirmDialog() {
         val dialog = newSaveConfirmDialogFragment(this,
-            { performComplete() },
-            { startActivity(TopActivity.createIntent(this)) })
+            onPositiveClick = { performComplete() },
+            onNegativeClick = { startActivity(TopActivity.createIntent(this)) })
         dialog.show(supportFragmentManager, dialog::class.simpleName)
     }
 
@@ -250,7 +250,8 @@ class EditorActivity : AppCompatActivity() {
      * 削除確認ダイアログを表示する。
      */
     private fun showDeleteConfirmDialog() {
-        val dialog = newDeleteConfirmDialogFragment(this, {
+        val dialog = newDeleteConfirmDialogFragment(this, onPositiveClick = {
+            // メモを削除
             deleteMemo(this, targetMemo!!) {
                 logDebug("Deleted memo=[$targetMemo!!]")
                 startActivity(TopActivity.createIntent(this))

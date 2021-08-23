@@ -99,13 +99,13 @@ class TopActivity : AppCompatActivity() {
     private fun showDeleteConfirmDialog(memoRow: MemoRow, memoRowPos: Int) {
         val memo = memoRow.memo
         // 削除確認ダイアログを起動
-        val dialog = newDeleteConfirmDialogFragment(this, {
+        val dialog = newDeleteConfirmDialogFragment(this, onPositiveClick = {
             // メモを削除
             deleteMemo(this, memo) {
                 logDebug("Deleted memo=[$memo]")
                 memoRowAdapter.remove(memoRow)
             }
-        }, {
+        }, onNegativeClick = {
             // レコードのスワイプを元に戻す
             memoRowAdapter.notifyItemChanged(memoRowPos)
         })
