@@ -124,6 +124,7 @@ fun newFileOutputDialogFragment(
  * @param initialFileName 初期表示ファイル名
  * @param canceledOnTouchOutside ダイアログ外の領域をタッチした際にキャンセル扱いにするかどうか
  * @param onOutputButtonClick 出力ボタンクリックのハンドラ
+ * @receiver ユーザーにより入力された出力ファイル名
  * @return ファイル出力ダイアログ
  */
 fun newFileOutputDialogFragment(
