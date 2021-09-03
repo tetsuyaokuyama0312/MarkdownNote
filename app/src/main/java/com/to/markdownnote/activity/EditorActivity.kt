@@ -172,8 +172,8 @@ class EditorActivity : AppCompatActivity() {
             binding.markdownEditorEditText.gravity = Gravity.NO_GRAVITY
             binding.markdownRenderingResultTextView.gravity = Gravity.NO_GRAVITY
 
-            // 編集した行番号を取得
-            val lineNr = text.substring(0, cursorPos).split(System.lineSeparator()).size
+            // 編集した行番号(0始まり)を取得
+            val lineNr = text.substring(0, cursorPos).split(System.lineSeparator()).size - 1
             // テキスト入力部をスクロール
             scrollViewByLineNr(binding.markdownEditorEditText, lineNr)
             // レンダリング結果表示部をスクロール
@@ -185,12 +185,16 @@ class EditorActivity : AppCompatActivity() {
      * 変更されたテキストの行数に応じてViewをスクロールする。
      *
      * @param textView スクロール対象のView
-     * @param lineNr 変更されたテキストの行数
+     * @param lineNr 変更されたテキストの行番号(0始まり)
      */
     private fun scrollViewByLineNr(textView: TextView, lineNr: Int) {
         textView.post {
             // 行番号からスクロール位置を求める
-            val lineTop = textView.layout?.getLineTop(lineNr - 1) ?: return@post
+            val layout = textView.layout ?: return@post
+            if (lineNr > layout.lineCount) {
+                return@post
+            }
+            val lineTop = layout.getLineTop(lineNr)
             // 対象行の表示位置を調整
             val scrollY = lineTop - (textView.height * VIEW_SCROLL_RATIO).toInt()
 
