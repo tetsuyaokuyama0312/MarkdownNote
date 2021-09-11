@@ -1,15 +1,13 @@
-package com.to.markdownnote.util
+package com.to.markdownnote.io
 
 import android.content.Context
 import android.os.Environment
+import com.to.markdownnote.util.nowTimestampForFileName
 import java.io.File
 import java.io.FileWriter
 
 /** デフォルトの出力ファイル名パターン: memo_${currentTime}.${fileExtension} */
 private const val DEFAULT_OUTPUT_FILE_NAME_PATTERN = "memo_%s.%s"
-
-/** デフォルトの出力ファイル拡張子: txt */
-private const val DEFAULT_OUTPUT_FILE_EXTENSION = "txt"
 
 /**
  * テキストファイルを出力する。
@@ -32,9 +30,9 @@ fun writeTextFile(context: Context, outputFileName: String, text: String): Strin
 /**
  * デフォルトの出力ファイル名を取得する。
  *
- * @param extension 出力ファイルの拡張子(デフォルト: txt)
+ * @param type 出力ファイルタイプ
  * @return デフォルトの出力ファイル名
  */
-fun getDefaultOutputFileName(extension: String = DEFAULT_OUTPUT_FILE_EXTENSION): String {
-    return DEFAULT_OUTPUT_FILE_NAME_PATTERN.format(nowTimestampForFileName(), extension)
+fun getDefaultOutputFileName(type: OutputFileType): String {
+    return DEFAULT_OUTPUT_FILE_NAME_PATTERN.format(nowTimestampForFileName(), type.getExtension())
 }
