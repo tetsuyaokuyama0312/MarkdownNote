@@ -20,6 +20,9 @@ import com.to.markdownnote.activity.dialog.newDeleteConfirmDialogFragment
 import com.to.markdownnote.activity.dialog.newFileOutputDialogFragment
 import com.to.markdownnote.activity.dialog.newSaveConfirmDialogFragment
 import com.to.markdownnote.databinding.ActivityEditorBinding
+import com.to.markdownnote.io.OutputFileType
+import com.to.markdownnote.io.getDefaultOutputFileName
+import com.to.markdownnote.io.writeTextFile
 import com.to.markdownnote.model.Memo
 import com.to.markdownnote.repository.deleteMemo
 import com.to.markdownnote.repository.insertMemo
@@ -225,7 +228,7 @@ class EditorActivity : AppCompatActivity() {
      */
     private fun showFileOutputDialog(type: OutputFileType) {
         val dialog =
-            newFileOutputDialogFragment(getDefaultOutputFileName(type.getExtension())) { outputFileName ->
+            newFileOutputDialogFragment(getDefaultOutputFileName(type)) { outputFileName ->
                 // 出力形式のテキストに変換
                 val outText = type.convert(binding.markdownEditorEditText.text.toString())
                 runAsync({
