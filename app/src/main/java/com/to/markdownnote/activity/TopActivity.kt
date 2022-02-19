@@ -63,10 +63,19 @@ class TopActivity : AppCompatActivity() {
                 DividerItemDecoration.VERTICAL
             )
         )
-        binding.memoListRecyclerView.setOnTouchListener { _, _ ->
-            exitSearch()
-            true
-        }
+        binding.memoListRecyclerView.addOnItemTouchListener(
+            object : RecyclerView.OnItemTouchListener {
+                override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                    exitSearch()
+                    // メモタップ時の画面遷移やスワイプ時の削除処理を続行するためfalse
+                    return false
+                }
+
+                override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {}
+
+                override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
+            }
+        )
 
         loadAllMemo()
 
@@ -104,6 +113,14 @@ class TopActivity : AppCompatActivity() {
         })
 
         binding.searchTextClearButton.setOnClickListener { binding.searchEditText.text.clear() }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (binding.searchEditText.text.isNotEmpty()) {
+            enterSearch()
+        }
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -191,7 +208,25 @@ class TopActivity : AppCompatActivity() {
     }
 
     /**
-     * 検索から離脱する
+     * 検索動作に入る
+     */
+    private fun enterSearch() {
+        binding.searchEditText.postDelayed({
+            // テキストにフォーカスを移す
+            binding.searchEditText.requestFocus()
+
+            // キーボードを表示する
+            val inputMethodManager =
+                getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.showSoftInput(
+                binding.searchEditText,
+                InputMethodManager.SHOW_IMPLICIT
+            )
+        }, 100) // 遅延なしだと正しく表示されない
+    }
+
+    /**
+     * 検索動作から離脱する
      */
     private fun exitSearch() {
         // キーボードを隠す
