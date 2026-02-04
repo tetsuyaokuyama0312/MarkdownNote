@@ -14,7 +14,7 @@ android {
     defaultConfig {
         applicationId = "com.to.markdownnote"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 35 // todo EdgeToEdge対応したら36に上げる
         versionCode = 1
         versionName = "1.0"
 
