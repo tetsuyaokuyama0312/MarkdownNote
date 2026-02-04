@@ -27,7 +27,11 @@ import com.to.markdownnote.model.Memo
 import com.to.markdownnote.repository.deleteMemo
 import com.to.markdownnote.repository.insertMemo
 import com.to.markdownnote.repository.updateMemo
-import com.to.markdownnote.util.*
+import com.to.markdownnote.util.logDebug
+import com.to.markdownnote.util.nowTimestampSec
+import com.to.markdownnote.util.parseMarkdownToHTML
+import com.to.markdownnote.util.renderHTML
+import com.to.markdownnote.util.runAsync
 import kotlin.math.max
 
 /**
@@ -121,26 +125,36 @@ class EditorActivity : AppCompatActivity() {
         when (item.itemId) {
             android.R.id.home ->
                 performToTop()
+
             R.id.menu_edit ->
                 ScreenMode.EDIT.apply(binding)
+
             R.id.menu_separate ->
                 ScreenMode.SEPARATE.apply(binding)
+
             R.id.menu_view ->
                 ScreenMode.VIEW.apply(binding)
+
             R.id.menu_file_output_plain_text ->
                 showFileOutputDialog(OutputFileType.PLAIN_TEXT)
+
             R.id.menu_file_output_markdown ->
                 showFileOutputDialog(OutputFileType.MARKDOWN)
+
             R.id.menu_file_output_html ->
                 showFileOutputDialog(OutputFileType.HTML)
+
             R.id.menu_delete ->
                 showDeleteConfirmDialog()
+
             R.id.menu_complete,
             R.id.menu_complete_text ->
                 performComplete()
+
             R.id.menu_cancel ->
                 // キャンセルは何もせず閉じる
                 return true
+
             else ->
                 return super.onOptionsItemSelected(item)
         }
@@ -241,7 +255,7 @@ class EditorActivity : AppCompatActivity() {
                         "${getString(R.string.saved_file_message)}${System.lineSeparator()}$it"
                     Snackbar.make(binding.root, msg, Snackbar.LENGTH_INDEFINITE)
                         .setAction(R.string.close) {}
-                        .apply { view.findViewById<TextView>(R.id.snackbar_text).maxLines = 5 }
+//                        .apply { view.findViewById<TextView>(R.id.snackbar_text).maxLines = 5 }
                         .show()
                 }
             }
@@ -252,7 +266,8 @@ class EditorActivity : AppCompatActivity() {
      * 保存確認ダイアログを表示する。
      */
     private fun showSaveConfirmDialog() {
-        val dialog = newSaveConfirmDialogFragment(this,
+        val dialog = newSaveConfirmDialogFragment(
+            this,
             onPositiveClick = { performComplete() },
             onNegativeClick = { startActivity(TopActivity.createIntent(this)) })
         dialog.show(supportFragmentManager, dialog::class.simpleName)
