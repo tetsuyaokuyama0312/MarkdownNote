@@ -160,10 +160,10 @@ class TopActivity : AppCompatActivity() {
         logDebug("Filter memo by $filterText")
 
         // 大文字小文字を区別せずにメモをフィルタリング
-        val filterTextList = filterText.split(SPACE_REGEX).map { it.toLowerCase() }
+        val filterTextList = filterText.split(SPACE_REGEX).map { it.lowercase() }
 
         val filteredMemoList = allMemoList.filter { memo ->
-            val memoText = memo.text.toLowerCase()
+            val memoText = memo.text.lowercase()
 
             filterTextList.all { filterText ->
                 filterText in memoText

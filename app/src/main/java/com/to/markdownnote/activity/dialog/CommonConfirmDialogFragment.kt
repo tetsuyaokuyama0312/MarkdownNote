@@ -97,7 +97,7 @@ class CommonConfirmDialogFragment private constructor() : DialogFragment() {
 
         override fun onClick(dialog: DialogInterface?, which: Int) {}
 
-        override fun writeToParcel(dest: Parcel?, flags: Int) {}
+        override fun writeToParcel(dest: Parcel, flags: Int) {}
 
         override fun describeContents(): Int {
             return 0
