@@ -1,10 +1,9 @@
 package com.to.markdownnote.feature.memo.editor
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.to.markdownnote.core.common.io.FileAccessor
 import com.to.markdownnote.core.common.io.OutputFileType
-import com.to.markdownnote.core.common.io.writeTextFile
 import com.to.markdownnote.core.common.util.nowTimestampSec
 import com.to.markdownnote.core.common.util.toMarkdownHtml
 import com.to.markdownnote.domain.model.Memo
@@ -12,18 +11,15 @@ import com.to.markdownnote.domain.usecase.DeleteMemoUseCase
 import com.to.markdownnote.domain.usecase.GetMemoByIdUseCase
 import com.to.markdownnote.domain.usecase.SaveMemoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val NEW_MEMO_ID = -1
-
 @HiltViewModel
 class MemoEditorViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+    private val fileAccessor: FileAccessor,
     private val getMemoById: GetMemoByIdUseCase,
     private val saveMemo: SaveMemoUseCase,
     private val deleteMemo: DeleteMemoUseCase,
@@ -34,8 +30,8 @@ class MemoEditorViewModel @Inject constructor(
 
     private var originalMemo: Memo? = null
 
-    fun init(memoId: Int) {
-        if (memoId == NEW_MEMO_ID) return
+    fun init(memoId: Int?) {
+        if (memoId == null) return
         viewModelScope.launch {
             val memo = getMemoById(memoId) ?: return@launch
             originalMemo = memo
@@ -129,7 +125,7 @@ class MemoEditorViewModel @Inject constructor(
         val type = _uiState.value.fileOutputType ?: return
         val text = type.convert(_uiState.value.text)
         viewModelScope.launch {
-            val path = context.writeTextFile(fileName, text)
+            val path = fileAccessor.writeTextFile(fileName, text)
             _uiState.update {
                 it.copy(showFileOutputDialog = false, fileOutputType = null, savedFilePath = path)
             }

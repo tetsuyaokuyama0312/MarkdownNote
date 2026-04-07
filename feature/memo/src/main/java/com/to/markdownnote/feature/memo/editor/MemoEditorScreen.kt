@@ -54,7 +54,7 @@ import com.to.markdownnote.feature.memo.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MemoEditorScreen(
-    memoId: Int,
+    memoId: Int?,
     onNavigateBack: () -> Unit,
     viewModel: MemoEditorViewModel = hiltViewModel(),
 ) {

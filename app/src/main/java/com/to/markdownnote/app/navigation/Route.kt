@@ -6,4 +6,4 @@ import kotlinx.serialization.Serializable
 object MemoListRoute
 
 @Serializable
-data class MemoEditorRoute(val memoId: Int = -1)
+data class MemoEditorRoute(val memoId: Int?)

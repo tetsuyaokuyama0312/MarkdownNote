@@ -22,7 +22,7 @@ fun AppNavHost() {
                     navController.navigate(MemoEditorRoute(memoId = memo.id))
                 },
                 onNewMemo = {
-                    navController.navigate(MemoEditorRoute())
+                    navController.navigate(MemoEditorRoute(memoId = null))
                 },
             )
         }
