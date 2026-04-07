@@ -1,5 +1,6 @@
 package com.to.markdownnote.feature.memo.list
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -171,18 +172,21 @@ private fun MemoListItem(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp),
+                    .background(MaterialTheme.colorScheme.error),
                 contentAlignment = Alignment.CenterEnd,
             ) {
                 Icon(
                     Icons.Default.Delete,
                     contentDescription = stringResource(R.string.delete),
-                    tint = MaterialTheme.colorScheme.error,
+                    tint = MaterialTheme.colorScheme.onError,
+                    modifier = Modifier.padding(horizontal = 16.dp),
                 )
             }
         },
     ) {
-        MemoItemContent(memo = memo, onClick = onMemoClick)
+        Box(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
+            MemoItemContent(memo = memo, onClick = onMemoClick)
+        }
     }
 }
 

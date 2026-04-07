@@ -210,46 +210,48 @@ private fun EditorTopBar(
                     tint = MaterialTheme.colorScheme.onPrimary,
                 )
             }
-            IconButton(onClick = { showOverflow = true }) {
-                Icon(
-                    Icons.Default.MoreVert,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                )
-            }
-            DropdownMenu(
-                expanded = showOverflow,
-                onDismissRequest = { showOverflow = false },
-            ) {
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.delete)) },
-                    leadingIcon = { Icon(Icons.Default.Delete, contentDescription = null) },
-                    onClick = {
-                        showOverflow = false
-                        onDelete()
-                    },
-                )
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.plain_text)) },
-                    onClick = {
-                        showOverflow = false
-                        onFileOutput(OutputFileType.PLAIN_TEXT)
-                    },
-                )
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.markdown)) },
-                    onClick = {
-                        showOverflow = false
-                        onFileOutput(OutputFileType.MARKDOWN)
-                    },
-                )
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.html)) },
-                    onClick = {
-                        showOverflow = false
-                        onFileOutput(OutputFileType.HTML)
-                    },
-                )
+            Box {
+                IconButton(onClick = { showOverflow = true }) {
+                    Icon(
+                        Icons.Default.MoreVert,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                    )
+                }
+                DropdownMenu(
+                    expanded = showOverflow,
+                    onDismissRequest = { showOverflow = false },
+                ) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.delete)) },
+                        leadingIcon = { Icon(Icons.Default.Delete, contentDescription = null) },
+                        onClick = {
+                            showOverflow = false
+                            onDelete()
+                        },
+                    )
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.plain_text)) },
+                        onClick = {
+                            showOverflow = false
+                            onFileOutput(OutputFileType.PLAIN_TEXT)
+                        },
+                    )
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.markdown)) },
+                        onClick = {
+                            showOverflow = false
+                            onFileOutput(OutputFileType.MARKDOWN)
+                        },
+                    )
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.html)) },
+                        onClick = {
+                            showOverflow = false
+                            onFileOutput(OutputFileType.HTML)
+                        },
+                    )
+                }
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
