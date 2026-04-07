@@ -52,6 +52,9 @@ dependencies {
     // Serialization (for type-safe Navigation routes)
     implementation(libs.kotlinx.serialization.json)
 
+    // Timber
+    implementation(libs.timber)
+
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)

@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.to.markdownnote.core.common.util.getFormattedDateTime
+import com.to.markdownnote.core.common.util.toFormattedDateTime
 import com.to.markdownnote.core.ui.component.ConfirmDialog
 import com.to.markdownnote.domain.model.Memo
 import com.to.markdownnote.feature.memo.R
@@ -195,7 +195,7 @@ private fun MemoItemContent(
     val lines = memo.text.lines()
     val firstLine = lines.firstOrNull().orEmpty()
     val secondLine = lines.drop(1).firstOrNull { it.isNotBlank() }
-    val (dateStr, timeStr) = getFormattedDateTime(context, memo.lastUpdatedDate)
+    val (dateStr, timeStr) = memo.lastUpdatedDate.toFormattedDateTime(context)
 
     Row(
         modifier = Modifier

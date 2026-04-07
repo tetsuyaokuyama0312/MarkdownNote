@@ -17,6 +17,7 @@ room = "2.8.4"
 commonmark = "0.24.0"
 kotlinSerialization = "2.3.0"
 kotlinSerializationJson = "1.9.0"
+timber = "5.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -57,6 +58,9 @@ kotlin-metadata-jvm = { module = "org.jetbrains.kotlin:kotlin-metadata-jvm", ver
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+
+# Timber (logging)
+timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
 # CommonMark (Markdown parser)
 commonmark = { group = "org.commonmark", name = "commonmark", version.ref = "commonmark" }

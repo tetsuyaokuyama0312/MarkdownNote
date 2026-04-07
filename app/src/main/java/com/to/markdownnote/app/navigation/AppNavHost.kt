@@ -7,16 +7,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.to.markdownnote.feature.memo.editor.MemoEditorScreen
 import com.to.markdownnote.feature.memo.list.MemoListScreen
-import kotlinx.serialization.Serializable
-
-@Serializable
-object MemoListRoute
-
-@Serializable
-data class MemoEditorRoute(val memoId: Int = -1)
 
 @Composable
-fun AppNavigation() {
+fun AppNavHost() {
     val navController = rememberNavController()
 
     NavHost(

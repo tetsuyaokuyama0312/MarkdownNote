@@ -1,6 +1,6 @@
 package com.to.markdownnote.core.common.io
 
-import com.to.markdownnote.core.common.util.parseMarkdownToHTML
+import com.to.markdownnote.core.common.util.toMarkdownHtml
 
 enum class OutputFileType {
     PLAIN_TEXT {
@@ -10,7 +10,7 @@ enum class OutputFileType {
         override fun getExtension() = "md"
     },
     HTML {
-        override fun convert(markdown: String) = parseMarkdownToHTML(markdown)
+        override fun convert(markdown: String) = markdown.toMarkdownHtml()
         override fun getExtension() = "html"
     };
 

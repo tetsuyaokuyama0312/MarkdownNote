@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.to.markdownnote.core.common.io.OutputFileType
 import com.to.markdownnote.core.common.io.writeTextFile
 import com.to.markdownnote.core.common.util.nowTimestampSec
-import com.to.markdownnote.core.common.util.parseMarkdownToHTML
+import com.to.markdownnote.core.common.util.toMarkdownHtml
 import com.to.markdownnote.domain.model.Memo
 import com.to.markdownnote.domain.usecase.DeleteMemoUseCase
 import com.to.markdownnote.domain.usecase.GetMemoByIdUseCase
@@ -42,7 +42,7 @@ class MemoEditorViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     text = memo.text,
-                    previewHtml = parseMarkdownToHTML(memo.text),
+                    previewHtml = memo.text.toMarkdownHtml(),
                 )
             }
         }
@@ -52,7 +52,7 @@ class MemoEditorViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 text = newText,
-                previewHtml = parseMarkdownToHTML(newText),
+                previewHtml = newText.toMarkdownHtml(),
                 isTextEdited = true,
             )
         }
@@ -129,7 +129,7 @@ class MemoEditorViewModel @Inject constructor(
         val type = _uiState.value.fileOutputType ?: return
         val text = type.convert(_uiState.value.text)
         viewModelScope.launch {
-            val path = writeTextFile(context, fileName, text)
+            val path = context.writeTextFile(fileName, text)
             _uiState.update {
                 it.copy(showFileOutputDialog = false, fileOutputType = null, savedFilePath = path)
             }

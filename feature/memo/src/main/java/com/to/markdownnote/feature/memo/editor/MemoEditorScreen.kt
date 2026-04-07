@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.to.markdownnote.core.common.io.OutputFileType
-import com.to.markdownnote.core.common.io.getDefaultOutputFileName
+import com.to.markdownnote.core.common.io.defaultFileName
 import com.to.markdownnote.core.ui.component.ConfirmDialog
 import com.to.markdownnote.core.ui.component.FileOutputDialog
 import com.to.markdownnote.core.ui.component.MarkdownHtmlView
@@ -114,7 +114,7 @@ fun MemoEditorScreen(
         val type = uiState.fileOutputType ?: OutputFileType.PLAIN_TEXT
         FileOutputDialog(
             title = stringResource(R.string.file_output),
-            defaultFileName = getDefaultOutputFileName(type),
+            defaultFileName = type.defaultFileName(),
             outputLabel = stringResource(R.string.output),
             cancelLabel = stringResource(R.string.cancel),
             fileNameLabel = stringResource(R.string.output_file_name),

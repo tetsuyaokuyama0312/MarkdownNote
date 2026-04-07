@@ -5,17 +5,17 @@ import org.commonmark.ext.gfm.tables.TablesExtension
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
 
-fun parseMarkdownToHTML(markdown: String): String {
-    val document = MarkdownProcessor.parser.parse(preprocessMarkdown(markdown))
+fun String.toMarkdownHtml(): String {
+    val document = MarkdownProcessor.parser.parse(preprocess())
     return MarkdownProcessor.renderer.render(document)
 }
 
-private fun preprocessMarkdown(markdown: String): String {
-    val lines = markdown.split("\n")
+private fun String.preprocess(): String {
+    val lines = split("\n")
     val result = mutableListOf<String>()
     var consecutiveBlankLines = 0
 
-    for (line in lines) {
+    lines.forEach { line ->
         if (line.isEmpty()) {
             consecutiveBlankLines++
             if (consecutiveBlankLines >= 2) {

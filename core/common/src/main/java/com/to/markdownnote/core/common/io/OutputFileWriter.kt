@@ -8,8 +8,8 @@ import java.io.FileWriter
 
 private const val DEFAULT_OUTPUT_FILE_NAME_PATTERN = "memo_%s.%s"
 
-fun writeTextFile(context: Context, outputFileName: String, text: String): String {
-    val outDir = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
+fun Context.writeTextFile(outputFileName: String, text: String): String {
+    val outDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
     val outFile = File(outDir, outputFileName)
     FileWriter(outFile).use { writer ->
         writer.append(text)
@@ -17,5 +17,5 @@ fun writeTextFile(context: Context, outputFileName: String, text: String): Strin
     return outFile.absolutePath
 }
 
-fun getDefaultOutputFileName(type: OutputFileType): String =
-    DEFAULT_OUTPUT_FILE_NAME_PATTERN.format(nowTimestampForFileName(), type.getExtension())
+fun OutputFileType.defaultFileName(): String =
+    DEFAULT_OUTPUT_FILE_NAME_PATTERN.format(nowTimestampForFileName(), getExtension())

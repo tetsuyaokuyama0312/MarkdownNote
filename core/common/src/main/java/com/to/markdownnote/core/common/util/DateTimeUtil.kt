@@ -20,38 +20,38 @@ private val dayOfWeekStringIds = listOf(
 
 fun nowTimestampMillis(): Long = System.currentTimeMillis()
 
-fun nowTimestampSec(): Long = millisToSec(nowTimestampMillis())
+fun nowTimestampSec(): Long = nowTimestampMillis().toSec()
 
 fun nowTimestampForFileName(): String = dateTimeFormatForFileName.format(Date(nowTimestampMillis()))
 
-fun getFormattedDateTime(context: Context, timestampSec: Long): Pair<String, String> {
-    val date = Date(secToMillis(timestampSec))
+fun Long.toFormattedDateTime(context: Context): Pair<String, String> {
+    val date = Date(toMillis())
 
     val dateStr = when {
-        isToday(date) -> context.getString(R.string.today)
-        isYesterday(date) -> context.getString(R.string.yesterday)
-        isThisYear(date) -> "${dateFormatExcludeYear.format(date)}(${getDayOfWeek(context, date)})"
-        else -> "${dateFormat.format(date)}(${getDayOfWeek(context, date)})"
+        date.isToday() -> context.getString(R.string.today)
+        date.isYesterday() -> context.getString(R.string.yesterday)
+        date.isThisYear() -> "${dateFormatExcludeYear.format(date)}(${date.getDayOfWeek(context)})"
+        else -> "${dateFormat.format(date)}(${date.getDayOfWeek(context)})"
     }
 
     return Pair(dateStr, timeFormat.format(date))
 }
 
-fun isToday(date: Date): Boolean = isToday(date.time)
+fun Date.isToday(): Boolean = isToday(time)
 
-fun isYesterday(date: Date): Boolean = isToday(date.time + 86_400_000L)
+fun Date.isYesterday(): Boolean = isToday(time + 86_400_000L)
 
-fun isThisYear(date: Date): Boolean {
+fun Date.isThisYear(): Boolean {
     val thisYear = Calendar.getInstance().get(Calendar.YEAR)
-    val cal = Calendar.getInstance().also { it.time = date }
+    val cal = Calendar.getInstance().also { it.time = this }
     return cal.get(Calendar.YEAR) == thisYear
 }
 
-fun getDayOfWeek(context: Context, date: Date): String {
-    val cal = Calendar.getInstance().also { it.time = date }
+fun Date.getDayOfWeek(context: Context): String {
+    val cal = Calendar.getInstance().also { it.time = this }
     return context.getString(dayOfWeekStringIds[cal.get(Calendar.DAY_OF_WEEK) - 1])
 }
 
-fun millisToSec(timestampMillis: Long): Long = timestampMillis / 1000
+private fun Long.toSec(): Long = this / 1000
 
-fun secToMillis(timestampSec: Long): Long = timestampSec * 1000
+private fun Long.toMillis(): Long = this * 1000
