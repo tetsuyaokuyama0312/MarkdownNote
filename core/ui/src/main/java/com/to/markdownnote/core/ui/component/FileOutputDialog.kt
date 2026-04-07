@@ -13,7 +13,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.to.markdownnote.core.ui.theme.MarkdownNoteTheme
 
 @Composable
 fun FileOutputDialog(
@@ -51,4 +53,22 @@ fun FileOutputDialog(
             TextButton(onClick = onDismiss) { Text(cancelLabel) }
         },
     )
+}
+
+// ---- Previews ----
+
+@Preview
+@Composable
+private fun FileOutputDialogPreview() {
+    MarkdownNoteTheme {
+        FileOutputDialog(
+            title = "ファイル出力",
+            defaultFileName = "memo_20240101_120000.txt",
+            outputLabel = "出力",
+            cancelLabel = "キャンセル",
+            fileNameLabel = "ファイル名",
+            onOutput = {},
+            onDismiss = {},
+        )
+    }
 }

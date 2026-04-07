@@ -38,9 +38,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -49,6 +52,7 @@ import com.to.markdownnote.core.common.io.defaultFileName
 import com.to.markdownnote.core.ui.component.ConfirmDialog
 import com.to.markdownnote.core.ui.component.FileOutputDialog
 import com.to.markdownnote.core.ui.component.MarkdownHtmlView
+import com.to.markdownnote.core.ui.theme.MarkdownNoteTheme
 import com.to.markdownnote.feature.memo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,9 +65,16 @@ fun MemoEditorScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val savedMessage = stringResource(R.string.saved_file_message)
+    val textFieldFocusRequester = remember { FocusRequester() }
 
     LaunchedEffect(memoId) {
         viewModel.init(memoId)
+    }
+
+    LaunchedEffect(Unit) {
+        if (memoId == null) {
+            textFieldFocusRequester.requestFocus()
+        }
     }
 
     LaunchedEffect(uiState.navigateBack) {
@@ -141,6 +152,7 @@ fun MemoEditorScreen(
             previewHtml = uiState.previewHtml,
             editorMode = uiState.editorMode,
             onTextChange = viewModel::onTextChange,
+            focusRequester = if (memoId == null) textFieldFocusRequester else null,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
@@ -267,12 +279,14 @@ private fun EditorBody(
     editorMode: EditorMode,
     onTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    focusRequester: FocusRequester? = null,
 ) {
     when (editorMode) {
         EditorMode.EDIT -> MarkdownEditor(
             text = text,
             onTextChange = onTextChange,
             modifier = modifier.padding(8.dp),
+            focusRequester = focusRequester,
         )
         EditorMode.VIEW -> MarkdownHtmlView(
             html = previewHtml,
@@ -286,6 +300,7 @@ private fun EditorBody(
                     .weight(1f)
                     .fillMaxHeight()
                     .padding(8.dp),
+                focusRequester = focusRequester,
             )
             VerticalDivider()
             MarkdownHtmlView(
@@ -303,17 +318,121 @@ private fun MarkdownEditor(
     text: String,
     onTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    focusRequester: FocusRequester? = null,
 ) {
     val scrollState = rememberScrollState()
     Box(modifier = modifier.verticalScroll(scrollState)) {
         BasicTextField(
             value = text,
             onValueChange = onTextChange,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .then(focusRequester?.let { Modifier.focusRequester(it) } ?: Modifier),
             textStyle = MaterialTheme.typography.bodyLarge.copy(
                 color = MaterialTheme.colorScheme.onSurface,
             ),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+        )
+    }
+}
+
+// ---- Previews ----
+
+@Preview
+@Composable
+private fun EditorTopBarEditModePreview() {
+    MarkdownNoteTheme {
+        EditorTopBar(
+            editorMode = EditorMode.EDIT,
+            onBack = {},
+            onModeChange = {},
+            onComplete = {},
+            onDelete = {},
+            onFileOutput = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun EditorTopBarSeparateModePreview() {
+    MarkdownNoteTheme {
+        EditorTopBar(
+            editorMode = EditorMode.SEPARATE,
+            onBack = {},
+            onModeChange = {},
+            onComplete = {},
+            onDelete = {},
+            onFileOutput = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun EditorTopBarViewModePreview() {
+    MarkdownNoteTheme {
+        EditorTopBar(
+            editorMode = EditorMode.VIEW,
+            onBack = {},
+            onModeChange = {},
+            onComplete = {},
+            onDelete = {},
+            onFileOutput = {},
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 360, heightDp = 600)
+@Composable
+private fun EditorBodyEditPreview() {
+    MarkdownNoteTheme {
+        EditorBody(
+            text = "# タイトル\n\n本文テキスト\n\n- リスト1\n- リスト2",
+            previewHtml = "<h1>タイトル</h1><p>本文テキスト</p>",
+            editorMode = EditorMode.EDIT,
+            onTextChange = {},
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 360, heightDp = 600)
+@Composable
+private fun EditorBodyViewPreview() {
+    MarkdownNoteTheme {
+        EditorBody(
+            text = "# タイトル\n\n本文テキスト",
+            previewHtml = "<h1>タイトル</h1><p>本文テキスト</p>",
+            editorMode = EditorMode.VIEW,
+            onTextChange = {},
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 800, heightDp = 600)
+@Composable
+private fun EditorBodySeparatePreview() {
+    MarkdownNoteTheme {
+        EditorBody(
+            text = "# タイトル\n\n本文テキスト\n\n- リスト1\n- リスト2",
+            previewHtml = "<h1>タイトル</h1><p>本文テキスト</p>",
+            editorMode = EditorMode.SEPARATE,
+            onTextChange = {},
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 360, heightDp = 300)
+@Composable
+private fun MarkdownEditorPreview() {
+    MarkdownNoteTheme {
+        MarkdownEditor(
+            text = "# タイトル\n\n本文テキスト\n\n**太字** と *斜体* のサンプル",
+            onTextChange = {},
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }

@@ -2,6 +2,7 @@ package com.to.markdownnote.feature.memo.list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,6 +37,7 @@ import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -48,6 +50,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.to.markdownnote.core.common.util.toFormattedDateTime
 import com.to.markdownnote.core.ui.component.ConfirmDialog
+import com.to.markdownnote.core.ui.theme.MarkdownNoteTheme
 import com.to.markdownnote.domain.model.Memo
 import com.to.markdownnote.feature.memo.R
 
@@ -231,5 +234,73 @@ private fun MemoItemContent(
             Text(text = dateStr, fontSize = 12.sp)
             Text(text = timeStr, fontSize = 12.sp)
         }
+    }
+}
+
+// ---- Previews ----
+
+private val previewMemo = Memo(
+    id = 1,
+    text = "タイトルテキスト\n本文の2行目です。少し長めのテキストを入れてみます。",
+    createdDate = 1_700_000_000L,
+    lastUpdatedDate = 1_700_000_000L,
+)
+
+private val previewMemoSingleLine = Memo(
+    id = 2,
+    text = "1行だけのメモです",
+    createdDate = 1_700_000_000L,
+    lastUpdatedDate = 1_700_000_000L,
+)
+
+@Preview(showBackground = true, widthDp = 360)
+@Composable
+private fun MemoItemContentPreview() {
+    MarkdownNoteTheme {
+        MemoItemContent(memo = previewMemo, onClick = {})
+    }
+}
+
+@Preview(showBackground = true, widthDp = 360)
+@Composable
+private fun MemoItemContentSingleLinePreview() {
+    MarkdownNoteTheme {
+        MemoItemContent(memo = previewMemoSingleLine, onClick = {})
+    }
+}
+
+@Preview(showBackground = true, widthDp = 360)
+@Composable
+private fun MemoListItemPreview() {
+    MarkdownNoteTheme {
+        MemoListItem(
+            memo = previewMemo,
+            onMemoClick = {},
+            onSwipeDelete = {},
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 360)
+@Composable
+private fun SearchBarEmptyPreview() {
+    MarkdownNoteTheme {
+        SearchBar(
+            query = "",
+            onQueryChange = {},
+            modifier = Modifier.width(360.dp),
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 360)
+@Composable
+private fun SearchBarWithQueryPreview() {
+    MarkdownNoteTheme {
+        SearchBar(
+            query = "検索テキスト",
+            onQueryChange = {},
+            modifier = Modifier.width(360.dp),
+        )
     }
 }
