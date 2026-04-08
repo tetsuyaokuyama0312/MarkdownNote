@@ -1,5 +1,7 @@
 # MarkdownNote
 
+[日本語版 README はこちら](README_ja.md)
+
 A Markdown-based note-taking app for Android, built with Jetpack Compose and Material Design 3.
 
 ## Features
