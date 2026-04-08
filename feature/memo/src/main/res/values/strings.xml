@@ -23,4 +23,9 @@
     <string name="no">No</string>
     <string name="cancel">Cancel</string>
     <string name="close">Close</string>
+    <string name="empty_memo_title">No memos yet</string>
+    <string name="empty_memo_description">Tap the button below to create your first memo</string>
+    <string name="empty_search_result">No memos found</string>
+    <string name="editor_hint">Write in Markdown…</string>
+    <string name="untitled_memo">Untitled</string>
 </resources>

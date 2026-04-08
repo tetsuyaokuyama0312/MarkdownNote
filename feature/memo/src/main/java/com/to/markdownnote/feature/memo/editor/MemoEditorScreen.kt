@@ -2,11 +2,13 @@ package com.to.markdownnote.feature.memo.editor
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
@@ -17,6 +19,8 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,6 +28,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -43,6 +50,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -134,15 +142,31 @@ fun MemoEditorScreen(
         )
     }
 
+    val untitledMemo = stringResource(R.string.untitled_memo)
+    val memoTitle = uiState.text.lines()
+        .firstOrNull { it.isNotBlank() }
+        ?.trimStart('#', ' ')
+        ?.trim()
+        ?.takeIf { it.isNotEmpty() }
+        ?: untitledMemo
+
     Scaffold(
         topBar = {
-            EditorTopBar(
+            Column {
+                EditorTopBar(
+                    title = memoTitle,
+                    onBack = { viewModel.onBackPressed() },
+                    onComplete = viewModel::onCompleteClick,
+                    onDelete = viewModel::onShowDeleteDialog,
+                    onFileOutput = viewModel::onShowFileOutputDialog,
+                )
+                HorizontalDivider()
+            }
+        },
+        bottomBar = {
+            EditorModeBar(
                 editorMode = uiState.editorMode,
-                onBack = { viewModel.onBackPressed() },
                 onModeChange = viewModel::onModeChange,
-                onComplete = viewModel::onCompleteClick,
-                onDelete = viewModel::onShowDeleteDialog,
-                onFileOutput = viewModel::onShowFileOutputDialog,
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -163,9 +187,8 @@ fun MemoEditorScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun EditorTopBar(
-    editorMode: EditorMode,
+    title: String,
     onBack: () -> Unit,
-    onModeChange: (EditorMode) -> Unit,
     onComplete: () -> Unit,
     onDelete: () -> Unit,
     onFileOutput: (OutputFileType) -> Unit,
@@ -173,53 +196,26 @@ private fun EditorTopBar(
     var showOverflow by remember { mutableStateOf(false) }
 
     TopAppBar(
-        title = {},
+        title = {
+            Text(
+                text = title,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        },
         navigationIcon = {
             IconButton(onClick = onBack) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary,
                 )
             }
         },
         actions = {
-            // Mode buttons
-            IconButton(
-                onClick = { onModeChange(EditorMode.EDIT) },
-                enabled = editorMode != EditorMode.EDIT,
-            ) {
-                Icon(
-                    Icons.Default.Edit,
-                    contentDescription = stringResource(R.string.edit),
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                )
-            }
-            IconButton(
-                onClick = { onModeChange(EditorMode.SEPARATE) },
-                enabled = editorMode != EditorMode.SEPARATE,
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_separate),
-                    contentDescription = stringResource(R.string.separate),
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                )
-            }
-            IconButton(
-                onClick = { onModeChange(EditorMode.VIEW) },
-                enabled = editorMode != EditorMode.VIEW,
-            ) {
-                Icon(
-                    Icons.Default.Visibility,
-                    contentDescription = stringResource(R.string.view),
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                )
-            }
             IconButton(onClick = onComplete) {
                 Icon(
                     Icons.Default.Check,
                     contentDescription = stringResource(R.string.complete),
-                    tint = MaterialTheme.colorScheme.onPrimary,
                 )
             }
             Box {
@@ -227,7 +223,6 @@ private fun EditorTopBar(
                     Icon(
                         Icons.Default.MoreVert,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimary,
                     )
                 }
                 DropdownMenu(
@@ -267,9 +262,67 @@ private fun EditorTopBar(
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primary,
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
         ),
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun EditorModeBar(
+    editorMode: EditorMode,
+    onModeChange: (EditorMode) -> Unit,
+) {
+    BottomAppBar {
+        SingleChoiceSegmentedButtonRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+        ) {
+            SegmentedButton(
+                selected = editorMode == EditorMode.EDIT,
+                onClick = { onModeChange(EditorMode.EDIT) },
+                shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3),
+                icon = {
+                    Icon(
+                        Icons.Default.Edit,
+                        contentDescription = null,
+                        modifier = Modifier.size(SegmentedButtonDefaults.IconSize),
+                    )
+                },
+            ) {
+                Text(stringResource(R.string.edit))
+            }
+            SegmentedButton(
+                selected = editorMode == EditorMode.SEPARATE,
+                onClick = { onModeChange(EditorMode.SEPARATE) },
+                shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3),
+                icon = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_separate),
+                        contentDescription = null,
+                        modifier = Modifier.size(SegmentedButtonDefaults.IconSize),
+                    )
+                },
+            ) {
+                Text(stringResource(R.string.separate))
+            }
+            SegmentedButton(
+                selected = editorMode == EditorMode.VIEW,
+                onClick = { onModeChange(EditorMode.VIEW) },
+                shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3),
+                icon = {
+                    Icon(
+                        Icons.Default.Visibility,
+                        contentDescription = null,
+                        modifier = Modifier.size(SegmentedButtonDefaults.IconSize),
+                    )
+                },
+            ) {
+                Text(stringResource(R.string.view))
+            }
+        }
+    }
 }
 
 @Composable
@@ -285,12 +338,12 @@ private fun EditorBody(
         EditorMode.EDIT -> MarkdownEditor(
             text = text,
             onTextChange = onTextChange,
-            modifier = modifier.padding(8.dp),
+            modifier = modifier.padding(12.dp),
             focusRequester = focusRequester,
         )
         EditorMode.VIEW -> MarkdownHtmlView(
             html = previewHtml,
-            modifier = modifier,
+            modifier = modifier.padding(horizontal = 12.dp),
         )
         EditorMode.SEPARATE -> Row(modifier = modifier) {
             MarkdownEditor(
@@ -299,7 +352,7 @@ private fun EditorBody(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .padding(8.dp),
+                    .padding(12.dp),
                 focusRequester = focusRequester,
             )
             VerticalDivider()
@@ -321,6 +374,7 @@ private fun MarkdownEditor(
     focusRequester: FocusRequester? = null,
 ) {
     val scrollState = rememberScrollState()
+    val hint = stringResource(R.string.editor_hint)
     Box(modifier = modifier.verticalScroll(scrollState)) {
         BasicTextField(
             value = text,
@@ -332,6 +386,18 @@ private fun MarkdownEditor(
                 color = MaterialTheme.colorScheme.onSurface,
             ),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+            decorationBox = { innerTextField ->
+                Box {
+                    if (text.isEmpty()) {
+                        Text(
+                            text = hint,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+                        )
+                    }
+                    innerTextField()
+                }
+            },
         )
     }
 }
@@ -340,12 +406,11 @@ private fun MarkdownEditor(
 
 @Preview
 @Composable
-private fun EditorTopBarEditModePreview() {
+private fun EditorTopBarPreview() {
     MarkdownNoteTheme {
         EditorTopBar(
-            editorMode = EditorMode.EDIT,
+            title = "タイトルテキスト",
             onBack = {},
-            onModeChange = {},
             onComplete = {},
             onDelete = {},
             onFileOutput = {},
@@ -355,12 +420,11 @@ private fun EditorTopBarEditModePreview() {
 
 @Preview
 @Composable
-private fun EditorTopBarSeparateModePreview() {
+private fun EditorTopBarUntitledPreview() {
     MarkdownNoteTheme {
         EditorTopBar(
-            editorMode = EditorMode.SEPARATE,
+            title = "無題のメモ",
             onBack = {},
-            onModeChange = {},
             onComplete = {},
             onDelete = {},
             onFileOutput = {},
@@ -368,18 +432,30 @@ private fun EditorTopBarSeparateModePreview() {
     }
 }
 
-@Preview
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(showBackground = true, widthDp = 360)
 @Composable
-private fun EditorTopBarViewModePreview() {
+private fun EditorModeBarEditPreview() {
     MarkdownNoteTheme {
-        EditorTopBar(
-            editorMode = EditorMode.VIEW,
-            onBack = {},
-            onModeChange = {},
-            onComplete = {},
-            onDelete = {},
-            onFileOutput = {},
-        )
+        EditorModeBar(editorMode = EditorMode.EDIT, onModeChange = {})
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(showBackground = true, widthDp = 360)
+@Composable
+private fun EditorModeBarSeparatePreview() {
+    MarkdownNoteTheme {
+        EditorModeBar(editorMode = EditorMode.SEPARATE, onModeChange = {})
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(showBackground = true, widthDp = 360)
+@Composable
+private fun EditorModeBarViewPreview() {
+    MarkdownNoteTheme {
+        EditorModeBar(editorMode = EditorMode.VIEW, onModeChange = {})
     }
 }
 
@@ -431,6 +507,18 @@ private fun MarkdownEditorPreview() {
     MarkdownNoteTheme {
         MarkdownEditor(
             text = "# タイトル\n\n本文テキスト\n\n**太字** と *斜体* のサンプル",
+            onTextChange = {},
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 360, heightDp = 300)
+@Composable
+private fun MarkdownEditorEmptyPreview() {
+    MarkdownNoteTheme {
+        MarkdownEditor(
+            text = "",
             onTextChange = {},
             modifier = Modifier.fillMaxSize(),
         )

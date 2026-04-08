@@ -23,4 +23,9 @@
     <string name="no">いいえ</string>
     <string name="cancel">キャンセル</string>
     <string name="close">閉じる</string>
+    <string name="empty_memo_title">メモがありません</string>
+    <string name="empty_memo_description">下のボタンをタップして最初のメモを作成してください</string>
+    <string name="empty_search_result">メモが見つかりません</string>
+    <string name="editor_hint">Markdownで入力…</string>
+    <string name="untitled_memo">無題のメモ</string>
 </resources>
