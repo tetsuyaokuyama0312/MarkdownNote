@@ -1,0 +1,33 @@
+MarkdownNote is a clean, distraction-free note-taking app built around Markdown. Whether you're jotting down quick ideas or writing structured documents, MarkdownNote keeps your notes organized and beautifully formatted.
+
+■ Powerful Markdown Editor
+Write in plain Markdown with full CommonMark support, including GitHub Flavored Markdown extensions — tables and strikethrough included. A placeholder hint guides first-time users right from the start.
+
+■ Three Editor Modes
+Switch between modes to match your workflow:
+• Edit — focus entirely on writing
+• Split — see your Markdown source and rendered preview side by side in real time
+• View — read your note as a polished, fully rendered document
+
+■ Instant Search
+Find any memo in seconds. Just start typing and results filter live as you go.
+
+■ Swipe to Delete
+Swipe a memo left to remove it. A confirmation step prevents accidental deletions.
+
+■ File Export
+Share or back up your notes in three formats:
+• Plain Text (.txt)
+• Markdown (.md)
+• HTML (.html)
+Files are saved directly to your device's Documents folder, ready to open in any app.
+
+■ Offline & Private
+All notes are stored locally on your device using a lightweight SQLite database. No account, no internet connection, no data ever leaves your phone.
+
+■ Material Design 3
+Built with the latest Material You design system for a modern, clean look that feels right at home on any Android device.
+
+─────────────────────────────
+Perfect for developers, writers, students, and anyone who values the simplicity and power of plain-text writing.
+─────────────────────────────
