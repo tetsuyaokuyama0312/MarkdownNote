@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MarkdownNote</string>
+    <string name="search_hint">Search</string>
+    <string name="new_memo">New memo</string>
+    <string name="no_additional_text">No additional text</string>
+    <string name="editor">Editor</string>
+    <string name="complete">Complete</string>
+    <string name="edit">Edit</string>
+    <string name="view">View</string>
+    <string name="separate">Separate</string>
+    <string name="delete">Delete</string>
+    <string name="file_output">File output</string>
+    <string name="save_confirm_message">Save your changes?</string>
+    <string name="delete_confirm_message">Delete this memo?</string>
+    <string name="output_file_name">Output file name</string>
+    <string name="plain_text">Plain text</string>
+    <string name="markdown">Markdown</string>
+    <string name="html">HTML</string>
+    <string name="saved_file_message">Saved file in following path</string>
+    <string name="output">Output</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
+    <string name="empty_memo_title">No memos yet</string>
+    <string name="empty_memo_description">Tap the button below to create your first memo</string>
+    <string name="empty_search_result">No memos found</string>
+    <string name="editor_hint">Write in Markdown…</string>
+    <string name="untitled_memo">Untitled</string>
+</resources>

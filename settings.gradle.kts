@@ -9,7 +9,6 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
-        maven { setUrl("https://jitpack.io") } // todo groupieを移行したら削除
     }
 }
 dependencyResolutionManagement {
@@ -17,9 +16,13 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { setUrl("https://jitpack.io") } // todo groupieを移行したら削除
     }
 }
 
 rootProject.name = "MarkdownNote"
 include(":app")
+include(":feature:memo")
+include(":domain")
+include(":data")
+include(":core:ui")
+include(":core:common")
