@@ -107,8 +107,8 @@ fun MemoEditorScreen(
     }
 
     // Dialogs
-    if (uiState.showSaveConfirmDialog) {
-        ConfirmDialog(
+    when (val dialog = uiState.dialog) {
+        DialogState.SaveConfirm -> ConfirmDialog(
             message = stringResource(R.string.save_confirm_message),
             confirmLabel = stringResource(R.string.yes),
             dismissLabel = stringResource(R.string.no),
@@ -117,29 +117,23 @@ fun MemoEditorScreen(
             onDismiss = { viewModel.onDiscardChanges() },
             onCancel = { viewModel.onDialogDismissed() },
         )
-    }
-
-    if (uiState.showDeleteConfirmDialog) {
-        ConfirmDialog(
+        DialogState.DeleteConfirm -> ConfirmDialog(
             message = stringResource(R.string.delete_confirm_message),
             confirmLabel = stringResource(R.string.yes),
             dismissLabel = stringResource(R.string.no),
             onConfirm = { viewModel.onDeleteConfirmed() },
             onDismiss = { viewModel.onDialogDismissed() },
         )
-    }
-
-    if (uiState.showFileOutputDialog) {
-        val type = uiState.fileOutputType ?: OutputFileType.PLAIN_TEXT
-        FileOutputDialog(
+        is DialogState.FileOutput -> FileOutputDialog(
             title = stringResource(R.string.file_output),
-            defaultFileName = type.defaultFileName(),
+            defaultFileName = dialog.type.defaultFileName(),
             outputLabel = stringResource(R.string.output),
             cancelLabel = stringResource(R.string.cancel),
             fileNameLabel = stringResource(R.string.output_file_name),
             onOutput = { fileName -> viewModel.onFileOutputConfirmed(fileName) },
             onDismiss = { viewModel.onDialogDismissed() },
         )
+        DialogState.None -> Unit
     }
 
     val untitledMemo = stringResource(R.string.untitled_memo)

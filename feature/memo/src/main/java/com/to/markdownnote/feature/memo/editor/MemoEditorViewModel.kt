@@ -89,58 +89,47 @@ class MemoEditorViewModel @Inject constructor(
 
     fun onBackPressed() {
         if (_uiState.value.isTextEdited) {
-            _uiState.update { it.copy(showSaveConfirmDialog = true) }
+            _uiState.update { it.copy(dialog = DialogState.SaveConfirm) }
         } else {
             _uiState.update { it.copy(navigateBack = true) }
         }
     }
 
     fun onSaveConfirmed() {
-        _uiState.update { it.copy(showSaveConfirmDialog = false) }
+        _uiState.update { it.copy(dialog = DialogState.None) }
         onCompleteClick()
     }
 
     fun onDiscardChanges() {
-        _uiState.update { it.copy(showSaveConfirmDialog = false, navigateBack = true) }
+        _uiState.update { it.copy(dialog = DialogState.None, navigateBack = true) }
     }
 
     fun onShowDeleteDialog() {
-        _uiState.update { it.copy(showDeleteConfirmDialog = true) }
+        _uiState.update { it.copy(dialog = DialogState.DeleteConfirm) }
     }
 
     fun onDeleteConfirmed() {
         viewModelScope.launch {
             originalMemo?.let { deleteMemo(it) }
-            _uiState.update { it.copy(showDeleteConfirmDialog = false, navigateBack = true) }
+            _uiState.update { it.copy(dialog = DialogState.None, navigateBack = true) }
         }
     }
 
     fun onShowFileOutputDialog(type: OutputFileType) {
-        _uiState.update {
-            it.copy(showFileOutputDialog = true, fileOutputType = type)
-        }
+        _uiState.update { it.copy(dialog = DialogState.FileOutput(type)) }
     }
 
     fun onFileOutputConfirmed(fileName: String) {
-        val type = _uiState.value.fileOutputType ?: return
+        val type = (_uiState.value.dialog as? DialogState.FileOutput)?.type ?: return
         val text = type.convert(_uiState.value.text)
         viewModelScope.launch {
             val path = fileAccessor.writeTextFile(fileName, text)
-            _uiState.update {
-                it.copy(showFileOutputDialog = false, fileOutputType = null, savedFilePath = path)
-            }
+            _uiState.update { it.copy(dialog = DialogState.None, savedFilePath = path) }
         }
     }
 
     fun onDialogDismissed() {
-        _uiState.update {
-            it.copy(
-                showSaveConfirmDialog = false,
-                showDeleteConfirmDialog = false,
-                showFileOutputDialog = false,
-                fileOutputType = null,
-            )
-        }
+        _uiState.update { it.copy(dialog = DialogState.None) }
     }
 
     fun onSavedFilePathConsumed() {
